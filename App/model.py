@@ -63,11 +63,6 @@ def newAnalyzer():
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
 
-citibike['graph'] = gr.newGraph(datastructure='ADJ_LIST',
-                                directed=True,
-                                size=1000,
-                                comparefunction=compareStations)
-
 # Funciones para agregar informacion al grafo
 
 def addTrip(citibike, trip):
