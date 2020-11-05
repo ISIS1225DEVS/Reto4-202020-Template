@@ -43,11 +43,114 @@ operación seleccionada.
 #  Variables
 # ___________________________________________________
 
+citibike1 = 'Data\\201801-1-citibike-tripdata.csv'
+citibike2 = 'Data\\201801-1-citibike-tripdata.csv'
+citibike3 = 'Data\\201801-1-citibike-tripdata.csv'
+citibike4 = 'Data\\201801-1-citibike-tripdata.csv'
+
+recursionLimit = None
 
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
 
+def printMenu():
+    print("\n")
+    print("------------------------------------------------------")
+    print("Bienvenido al analizador de datos de CitiBike")
+    print("------------------------------------------------------\n")
+    print("1- Inicializar Analizador")
+    print("2- Cargar información CitiBike")
+    print("3- Cantidad de clusters de viajes")
+    print("4- Ruta turística cirular")
+    print("5- Estaciones críticas")
+    print("6- Ruta turística por resistencia")
+    print("7- Recomendador de rutas")
+    print("8- Ruta de interés turístico")
+    print("9- Identificación de estaciones para publicidad")
+    print("10- Identificación de bicicletas para mantenimiento")
+    print("0- Salir")
+    print("------------------------------------------------------")
+
+printMenu()
+
+
+def optionTwo():
+
+
+def optionThree():
+
+
+def optionFour():
+
+
+def optionFive():
+
+
+def optionSix():
+
+
+def optionSeven():
+
+
+def optionEight():
+
+
+def optionNine():
+
+
+def optionTen():
+
+
 """
 Menu principal
 """
+
+while True:
+    printMenu()
+    inputs = input('Seleccione una opción para continuar\n>')
+
+    if int(inputs[0]) == 1:
+        print("\nInicializando....")
+        # cont es el controlador que se usará de acá en adelante
+        cont = controller.init()
+
+    elif int(inputs[0]) == 2:
+        executiontime = timeit.timeit(optionTwo, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 3:
+        executiontime = timeit.timeit(optionThree, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 4:
+        executiontime = timeit.timeit(optionFour, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 5:
+        executiontime = timeit.timeit(optionFive, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 6:
+        executiontime = timeit.timeit(optionSix, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 7:
+        executiontime = timeit.timeit(optionSeven, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 8:
+        executiontime = timeit.timeit(optionEight, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 9:
+        executiontime = timeit.timeit(optionNine, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 10:
+        executiontime = timeit.timeit(optionTen, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    else:
+        sys.exit(0)
+sys.exit(0)
