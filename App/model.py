@@ -31,6 +31,7 @@ from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
+
 assert config
 
 """
@@ -42,11 +43,49 @@ de creacion y consulta sobre las estructuras de datos.
 #                       API
 # -----------------------------------------------------
 
+citibike['graph'] = gr.newGraph(datastructure='ADJ_LIST',
+                                directed=True,
+                                size=1000,
+                                comparefunction=compareStations)
+
 # Funciones para agregar informacion al grafo
+
+def addTrip(citibike, trip):
+    """
+    """
+    origin = trip['start station id']
+    destination = trip['end station id']
+    duration = int(trip['tripduration'])
+    addStation(citibike, origin)
+    addStation(citibike, destination)
+    addConnection(citibike, origin, destination, duration)
+
+def addStation(citibike, stationid):
+    """
+    Adiciona una estación como un vertice del grafo
+    """
+    if not gr.containsVertex(citibike ['graph'], stationid):
+            gr.insertVertex(citibike ['graph'], stationid)
+    return citibike
+
+def addConnection(citibike, origin, destination, duration):
+    """
+    Adiciona un arco entre dos estaciones
+    """
+    edge = gr.getEdge(citibike ['graph'], origin, destination)
+    if edge is None:
+        gr.addEdge(citibike['graph'], origin, destination, duration)
+    return citibike
 
 # ==============================
 # Funciones de consulta
 # ==============================
+
+def req1 (citibike, station1, station2):
+    sc = scc.KosarajuSCC(citibike['graph'])
+    num = scc.connectedComponents(sc)
+    strongly = scc.stronglyConnected(sc, station1, station2)
+    return (num,strongly)
 
 # ==============================
 # Funciones Helper
