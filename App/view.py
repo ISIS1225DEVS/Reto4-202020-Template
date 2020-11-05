@@ -43,6 +43,10 @@ operación seleccionada.
 #  Variables
 # ___________________________________________________
 
+citibike1 = 'Data\\201801-1-citibike-tripdata.csv'
+citibike2 = 'Data\\201801-1-citibike-tripdata.csv'
+citibike3 = 'Data\\201801-1-citibike-tripdata.csv'
+citibike4 = 'Data\\201801-1-citibike-tripdata.csv'
 
 # ___________________________________________________
 #  Menu principal
