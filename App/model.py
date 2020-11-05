@@ -31,6 +31,7 @@ from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
+
 assert config
 
 """
@@ -61,6 +62,11 @@ def newAnalyzer():
         return citibike
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
+
+citibike['graph'] = gr.newGraph(datastructure='ADJ_LIST',
+                                directed=True,
+                                size=1000,
+                                comparefunction=compareStations)
 
 # Funciones para agregar informacion al grafo
 
@@ -94,6 +100,13 @@ def addConnection(citibike, origin, destination, duration):
 # ==============================
 # Funciones de consulta
 # ==============================
+
+def req1 (citibike, station1, station2):
+    sc = scc.KosarajuSCC(citibike['graph'])
+    num = scc.connectedComponents(sc)
+    strongly = scc.stronglyConnected(sc, station1, station2)
+    return (num,strongly)
+
 # ==============================
 # Funciones Helper
 # ==============================
