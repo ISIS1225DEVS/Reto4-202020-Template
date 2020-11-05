@@ -41,13 +41,59 @@ de creacion y consulta sobre las estructuras de datos.
 # -----------------------------------------------------
 #                       API
 # -----------------------------------------------------
+def newAnalyzer():
+    try:
+        citibike = {'graph': None,
+                    'stops': None,
+                    'components': None,
+                    'paths': None
+                    }
+
+        citibike['stops'] = m.newMap(numelements=14000,
+                                     maptype='PROBING',
+                                     comparefunction=compareStations)
+
+        citibike['graph'] = gr.newGraph(datastructure='ADJ_LIST',
+                                        directed=True,
+                                        size=1000,
+                                        comparefunction=compareStations)
+
+        return citibike
+    except Exception as exp:
+        error.reraise(exp, 'model:newAnalyzer')
 
 # Funciones para agregar informacion al grafo
+
+def addTrip(citibike, trip):
+    """
+    """
+    origin = trip['start station id']
+    destination = trip['end station id']
+    duration = int(trip['tripduration'])
+    addStation(citibike, origin)
+    addStation(citibike, destination)
+    addConnection(citibike, origin, destination, duration)
+
+def addStation(citibike, stationid):
+    """
+    Adiciona una estación como un vertice del grafo
+    """
+    if not gr.containsVertex(citibike ['graph'], stationid):
+            gr.insertVertex(citibike ['graph'], stationid)
+    return citibike
+
+def addConnection(citibike, origin, destination, duration):
+    """
+    Adiciona un arco entre dos estaciones
+    """
+    edge = gr.getEdge(citibike['graph'], origin, destination)
+    if edge is None:
+        gr.addEdge(citibike['graph'], origin, destination, duration)
+    return citibike
 
 # ==============================
 # Funciones de consulta
 # ==============================
-
 # ==============================
 # Funciones Helper
 # ==============================
@@ -55,3 +101,12 @@ de creacion y consulta sobre las estructuras de datos.
 # ==============================
 # Funciones de Comparacion
 # ==============================
+
+def compareStations(stop, keyvaluestop):
+    stopcode = keyvaluestop['key']
+    if (stop == stopcode):
+        return 0
+    elif (stop > stopcode):
+        return 1
+    else:
+        return -1
