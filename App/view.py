@@ -109,45 +109,45 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
 
-    if int(inputs[0]) == 1:
+    if int(inputs) == 1:
         print("\nInicializando el controlador...")
         # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
 
-    elif int(inputs[0]) == 2:
+    elif int(inputs) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-    elif int(inputs[0]) == 3:
+    elif int(inputs) == 3:
         executiontime = timeit.timeit(optionThree, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-    elif int(inputs[0]) == 4:
+    elif int(inputs) == 4:
         executiontime = timeit.timeit(optionFour, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-    elif int(inputs[0]) == 5:
+    elif int(inputs) == 5:
         executiontime = timeit.timeit(optionFive, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-    elif int(inputs[0]) == 6:
+    elif int(inputs) == 6:
         executiontime = timeit.timeit(optionSix, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-    elif int(inputs[0]) == 7:
+    elif int(inputs) == 7:
         executiontime = timeit.timeit(optionSeven, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-    elif int(inputs[0]) == 8:
+    elif int(inputs) == 8:
         executiontime = timeit.timeit(optionEight, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-    elif int(inputs[0]) == 9:
+    elif int(inputs) == 9:
         executiontime = timeit.timeit(optionNine, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
 
-    elif int(inputs[0]) == 10:
+    elif int(inputs) == 10:
         executiontime = timeit.timeit(optionTen, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
