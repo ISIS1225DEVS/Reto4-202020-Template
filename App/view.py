@@ -61,7 +61,7 @@ def printMenu():
     print("*******************************************")
     print("Bienvenido")
     print("1- Crear estructuras de datos")
-    print("2- Leer informacion")
+    print("2- Cargar informacion")
     print("3- Buscar cantidad de cluster de Viajes")
     print("4- Buscar ruta turistica Circular")
     print("5- Buscar ruta turistica de menor tiempo")
@@ -77,10 +77,22 @@ def optionOne():
     None
 
 def optionTwo():
-    None
+    print("\nCargando información de transporte de Citibike ....")
+    controller.loadServices(cont, servicefile)
+    numedges = controller.totalConnections(cont)
+    numvertex = controller.totalStops(cont)
+    print('Numero de vertices: ' + str(numvertex))
+    print('Numero de arcos: ' + str(numedges))
+    print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
+    sys.setrecursionlimit(recursionLimit)
+    print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+
 
 def optionThree():
-    None
+        v1="15221-10"
+        v2="94079-10"
+        controller.conectados_estrictamente(cont['connections'],v1,v2)
+
 
 def optionFour():
     None
@@ -102,24 +114,6 @@ def optionNine():
 
 def optionTen():
     None
-
-def optionTwo():
-    print("\nCargando información de transporte de Citibike ....")
-    controller.loadServices(cont, servicefile)
-    numedges = controller.totalConnections(cont)
-    numvertex = controller.totalStops(cont)
-    print('Numero de vertices: ' + str(numvertex))
-    print('Numero de arcos: ' + str(numedges))
-    print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
-    sys.setrecursionlimit(recursionLimit)
-    print('El limite de recursion se ajusta a: ' + str(recursionLimit))
-
-
-def optionThree():
-        v1="15221-10"
-        v2="94079-10"
-        controller.conectados_estrictamente(cont['connections'],v1,v2)
-
 
 """
 Menu principal
@@ -152,6 +146,7 @@ while True:
 
 
     elif int(inputs[0]) == 3:
+        optionThree()
         executiontime = timeit.timeit(optionThree, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
@@ -190,15 +185,7 @@ while True:
         executiontime = timeit.timeit(optionTen, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-
+        
     else:
         sys.exit(0)
-
-    elif int(inputs[0]) == 3:
-        optionThree()
-        executiontime = timeit.timeit(optionThree, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
-    else:
-        sys.exit(0)
-sys.exit(0)
 
