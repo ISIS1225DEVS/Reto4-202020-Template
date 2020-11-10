@@ -43,6 +43,15 @@ de creacion y consulta sobre las estructuras de datos.
 # -----------------------------------------------------
 
 
+
+def createDataStructures():
+     citibike[‘graph’] = gr.newGraph(datastructure='ADJ_LIST',
+                                  directed=True,
+                                  size=1000,
+                                  comparefunction=compareStations)
+
+    return citibike
+
 def newAnalyzer():
     """ Inicializa el analizador
 
@@ -73,7 +82,63 @@ def newAnalyzer():
         error.reraise(exp, 'model:newAnalyzer')
 
 
+
 # Funciones para agregar informacion al grafo
+
+
+
+def loadTrips(citibike):
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            loadFile(analyzer, filename)
+    return analyzer
+
+
+def loadFile(citibike, tripfile):
+    """
+    """
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+    for trip in input_file:
+        model.addTrip(citibike, trip)
+    return citibike
+
+
+def addTrip(citibike, trip):
+    """
+    Añade un viaje
+    """
+    origin = trip['start station id']
+    destination = trip['end station id']
+    duration = int(trip['tripduration'])
+    addStation(citibike, origin)
+    addStation(citibike, destination)
+    addConnection(citibike, origin, destination, duration)
+    
+    return citibike
+
+
+def addStation(citibike, stationid):
+    """
+    Adiciona una estación como un vertice del grafo
+    """
+    if not gr.containsVertex(citibike [‘graph’], stationid):
+            gr.insertVertex(citibike [‘graph’], stationid)
+
+    return citibike
+
+
+def addConnection(citibike, origin, destination, duration):
+    """
+    Adiciona un arco entre dos estaciones
+    """
+    edge = gr.getEdge(citibike [graph], origin, destination)
+    if edge is None:
+        gr.addEdge(analyzer[graph], origin, destination, duration)
+    return citibike
+
 
 def addStopConnection(analyzer, lastservice, service):
     """
@@ -152,15 +217,6 @@ def addRouteConnections(analyzer):
                 addConnection(analyzer, route, prevrout, 0)
             prevrout = route
 
-
-def addConnection(analyzer, origin, destination, distance):
-    """
-    Adiciona un arco entre dos estaciones
-    """
-    edge = gr.getEdge(analyzer['connections'], origin, destination)
-    if edge is None:
-        gr.addEdge(analyzer['connections'], origin, destination, distance)
-    return analyzer
 
 # ==============================
 # Funciones de consulta
@@ -294,3 +350,4 @@ def compareroutes(route1, route2):
         return 1
     else:
         return -1
+
