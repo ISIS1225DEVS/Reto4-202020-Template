@@ -89,8 +89,8 @@ def optionTwo():
 
 
 def optionThree():
-        v1="15221-10"
-        v2="94079-10"
+        v1=input("Ingrese estación 1")
+        v2=input("Ingrese estación 2")
         controller.conectados_estrictamente(cont['connections'],v1,v2)
 
 

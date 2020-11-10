@@ -156,7 +156,6 @@ def addStopConnection(analyzer, lastservice, service):
         origin = formatVertex(lastservice)
         destination = formatVertex(service)
         cleanServiceDistance(lastservice, service)
-        distance = float(service['Distance']) - float(lastservice['Distance'])
         addStop(analyzer, origin)
         addStop(analyzer, destination)
         addConnection(analyzer, origin, destination, distance)
