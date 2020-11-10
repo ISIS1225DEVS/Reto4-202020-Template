@@ -47,6 +47,10 @@ servicefile = ''
 initialStation = None
 recursionLimit = 20000
 
+servicefile = 'bus_routes_14000.csv'
+initialStation = None
+recursionLimit = 20000
+
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
@@ -99,6 +103,23 @@ def optionNine():
 def optionTen():
     None
 
+def optionTwo():
+    print("\nCargando información de transporte de Citibike ....")
+    controller.loadServices(cont, servicefile)
+    numedges = controller.totalConnections(cont)
+    numvertex = controller.totalStops(cont)
+    print('Numero de vertices: ' + str(numvertex))
+    print('Numero de arcos: ' + str(numedges))
+    print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
+    sys.setrecursionlimit(recursionLimit)
+    print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+
+
+def optionThree():
+        v1="15221-10"
+        v2="94079-10"
+        controller.conectados_estrictamente(cont['connections'],v1,v2)
+
 
 """
 Menu principal
@@ -114,9 +135,20 @@ while True:
         print("Tiempo de ejecución: " + str(executiontime))
 
 
+while True:
+    printMenu()
+    inputs = input('Seleccione una opción para continuar\n>')
+
+    if int(inputs[0]) == 1:
+        print("\nInicializando....")
+        # cont es el controlador que se usará de acá en adelante
+        cont = controller.init()
+
+
     elif int(inputs[0]) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
+
 
 
     elif int(inputs[0]) == 3:
@@ -161,3 +193,12 @@ while True:
 
     else:
         sys.exit(0)
+
+    elif int(inputs[0]) == 3:
+        optionThree()
+        executiontime = timeit.timeit(optionThree, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+    else:
+        sys.exit(0)
+sys.exit(0)
+
