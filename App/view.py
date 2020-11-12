@@ -118,8 +118,10 @@ while True:
         controller.loadTrips(cont)
         numedges = controller.totalConnections(cont)
         numvertex = controller.totalStops(cont)
+        scc = controller.numSCC(cont)
         print('Numero de vertices: ' + str(numvertex))
         print('Numero de arcos: ' + str(numedges))
+        print('Numero de elementos fuertemente conectados: ' + str(scc))
 
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))

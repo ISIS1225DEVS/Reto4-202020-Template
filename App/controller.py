@@ -84,3 +84,6 @@ def totalStops(analyzer):
     Total de paradas de autobus
     """
     return model.totalStops(analyzer)
+
+def numSCC(analyzer):
+    return model.numSCC(analyzer)

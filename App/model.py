@@ -102,6 +102,10 @@ def req1 (citibike, station1, station2):
     strongly = scc.stronglyConnected(sc, station1, station2)
     return (num,strongly)
 
+def numSCC(graph):
+    sc = scc.KosarajuSCC(graph['graph'])
+    return scc.connectedComponents(sc)
+
 def totalConnections(analyzer):
     """
     Retorna el total arcos del grafo
