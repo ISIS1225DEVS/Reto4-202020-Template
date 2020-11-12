@@ -74,9 +74,9 @@ def addConnection(citibike, origin, destination, duration):
     """
     Adiciona un arco entre dos estaciones
     """
-    edge = gr.getEdge(citibike [graph], origin, destination)
+    edge = gr.getEdge(citibike ['graph'], origin, destination)
     if edge is None:
-        gr.addEdge(analyzer[graph], origin, destination, duration)
+        gr.addEdge(analyzer['graph'], origin, destination, duration)
     return citibike
 
 # ==============================
