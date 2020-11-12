@@ -152,7 +152,7 @@ while True:
         executiontime = timeit.timeit(optionNine, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-    elif int(inputs[0]) == 10:
+    elif int(inputs[0]) == 10 or inputs == 'C':
         executiontime = timeit.timeit(optionTen, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
