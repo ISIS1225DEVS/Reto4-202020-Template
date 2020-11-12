@@ -59,6 +59,7 @@ def printMenu():
     print("2- Leer información")
     print("3- Contar elementos conectados")
     print("4- Contar elementos fuertemente conectados ")
+    print("0- Salir")
 
 """
 Menu principal
