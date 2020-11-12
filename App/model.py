@@ -102,6 +102,18 @@ def req1 (citibike, station1, station2):
     strongly = scc.stronglyConnected(sc, station1, station2)
     return (num,strongly)
 
+def totalConnections(analyzer):
+    """
+    Retorna el total arcos del grafo
+    """
+    return gr.numEdges(analyzer['graph'])
+
+def totalStops(analyzer):
+    """
+    Retorna el total de estaciones (vertices) del grafo
+    """
+    return gr.numVertices(analyzer['graph'])
+
 # ==============================
 # Funciones Helper
 # ==============================

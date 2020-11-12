@@ -74,31 +74,31 @@ printMenu()
 
 
 def optionTwo():
-
+    pass
 
 def optionThree():
-
+    pass
 
 def optionFour():
-
+    pass
 
 def optionFive():
-
+    pass
 
 def optionSix():
-
+    pass
 
 def optionSeven():
-
+    pass
 
 def optionEight():
-
+    pass
 
 def optionNine():
-
+    pass
 
 def optionTen():
-
+    pass
 
 """
 Menu principal
@@ -114,6 +114,13 @@ while True:
         cont = controller.init()
 
     elif int(inputs[0]) == 2:
+
+        controller.loadTrips(cont)
+        numedges = controller.totalConnections(cont)
+        numvertex = controller.totalStops(cont)
+        print('Numero de vertices: ' + str(numvertex))
+        print('Numero de arcos: ' + str(numedges))
+
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 

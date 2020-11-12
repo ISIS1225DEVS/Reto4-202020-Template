@@ -24,6 +24,7 @@
  *
  """
 
+import os
 import config as cf
 from App import model
 import csv
@@ -39,6 +40,14 @@ recae sobre el controlador.
 # ___________________________________________________
 #  Inicializacion del catalogo
 # ___________________________________________________
+
+def init():
+    """
+    Llama la funcion de inicializacion  del modelo.
+    """
+    # analyzer es utilizado para interactuar con el modelo
+    analyzer = model.newAnalyzer()
+    return analyzer
 
 # ___________________________________________________
 #  Funciones para la carga de datos y almacenamiento
@@ -63,3 +72,15 @@ def loadFile(citibike, tripfile):
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+
+def totalConnections(analyzer):
+    """
+    Total de enlaces entre las paradas
+    """
+    return model.totalConnections(analyzer)
+
+def totalStops(analyzer):
+    """
+    Total de paradas de autobus
+    """
+    return model.totalStops(analyzer)
