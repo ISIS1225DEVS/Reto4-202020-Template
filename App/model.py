@@ -51,10 +51,6 @@ def newAnalyzer():
 
 
 # Funciones para agregar informacion al grafo
-
-# ==============================
-# Funciones de consulta
-# ==============================
 def addTrip(citibike, trip):
     """
 Añade un viaje al grafo 
@@ -83,34 +79,15 @@ def addConnection(citibike, origin, destination, duration):
         gr.addEdge(analyzer[graph], origin, destination, duration)
     return citibike
 
-
-def loadTrips(citibike):
-    for filename in os.listdir(cf.data_dir):
-        if filename.endswith('.csv'):
-            print('Cargando archivo: ' + filename)
-            loadFile(analyzer, filename)
-    return analyzer
-
-
-def loadFile(citibike, tripfile):
-    """
-    """
-    tripfile = cf.data_dir + tripfile
-    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
-                                delimiter=",")
-    for trip in input_file:
-        model.addTrip(citibike, trip)
-    return citibike
-
 # ==============================
 # Funciones de consulta
 # ==============================
 
-def numSCC(graph, sc):
+def numSCC(graph,sc):
     sc = scc.KosarajuSCC(graph)
     return scc.connectedComponents(sc)
 
-def sameCC(sc, station1, station2)
+def sameCC(sc, station1, station2):
     return scc.stronglyConnected(sc, station1, station2)
 
 
