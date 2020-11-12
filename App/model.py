@@ -66,17 +66,17 @@ def addStation(citibike, stationid):
     """
     Adiciona una estación como un vertice del grafo
     """
-    if not  gr.containsVertex(citibike [‘graph’], stationid):
-            gr.insertVertex(citibike [‘graph’], stationid)
+    if not  gr.containsVertex(citibike ['graph'], stationid):
+            gr.insertVertex(citibike ['graph'], stationid)
     return citibike
 
 def addConnection(citibike, origin, destination, duration):
     """
     Adiciona un arco entre dos estaciones
     """
-    edge = gr.getEdge(citibike [graph], origin, destination)
+    edge = gr.getEdge(citibike ['graph'], origin, destination)
     if edge is None:
-        gr.addEdge(analyzer[graph], origin, destination, duration)
+        gr.addEdge(analyzer['graph'], origin, destination, duration)
     return citibike
 
 # ==============================
@@ -100,7 +100,7 @@ def sameCC(sc, station1, station2):
 # ==============================
 def compareStations(station, keyvaluestop):
 
-stationcode = keyvaluestop['key']
+stationcode  = keyvaluestop['key']
 if station == stationcode:
     return 0
 elif station > stationcode:

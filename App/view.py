@@ -48,14 +48,7 @@ operación seleccionada.
 #  Menu principal
 # ___________________________________________________
 
-def printMenu():
-    print("\n")
-    print("*******************************************")
-    print("Bienvenido")
-    print("1- Crear estructuras de datos")
-    print("2- Leer información")
-    print("3- "
-        """
+
 Menu principal
 """
 while True:
