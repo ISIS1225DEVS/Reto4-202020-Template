@@ -63,7 +63,6 @@ def newAnalyzer():
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
 
-
 # Funciones para agregar informacion al grafo
 
 def addTrip(citibike, trip):
@@ -102,6 +101,22 @@ def req1 (citibike, station1, station2):
     num = scc.connectedComponents(sc)
     strongly = scc.stronglyConnected(sc, station1, station2)
     return (num,strongly)
+
+def numSCC(graph):
+    sc = scc.KosarajuSCC(graph['graph'])
+    return scc.connectedComponents(sc)
+
+def totalConnections(analyzer):
+    """
+    Retorna el total arcos del grafo
+    """
+    return gr.numEdges(analyzer['graph'])
+
+def totalStops(analyzer):
+    """
+    Retorna el total de estaciones (vertices) del grafo
+    """
+    return gr.numVertices(analyzer['graph'])
 
 # ==============================
 # Funciones Helper
