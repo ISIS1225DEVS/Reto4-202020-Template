@@ -24,6 +24,12 @@
  *
  """
 
+import sys
+import config
+from App import controller
+from DISClib.ADT import stack
+import timeit
+assert config
 
 # ___________________________________________________
 #  Variables
@@ -97,7 +103,7 @@ def optionThree():
 # def optionSeven():
 #     maxvert, maxdeg = controller.servedRoutes(cont)
 #     print('Estación: ' + maxvert + '  Total rutas servidas: '
-#           + str(maxdeg))
+#          + str(maxdeg))
 
 
 """
