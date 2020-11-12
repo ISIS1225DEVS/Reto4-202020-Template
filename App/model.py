@@ -46,8 +46,8 @@ def newAnalyzer():
     try:
         citibike = {'graph': None,
                     'stops': None,
-                    'components': None,
-                    'paths': None
+                    #'components': None,
+                    #'paths': None
                     }
 
         citibike['stops'] = m.newMap(numelements=14000,
@@ -63,10 +63,6 @@ def newAnalyzer():
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
 
-citibike['graph'] = gr.newGraph(datastructure='ADJ_LIST',
-                                directed=True,
-                                size=1000,
-                                comparefunction=compareStations)
 
 # Funciones para agregar informacion al grafo
 
