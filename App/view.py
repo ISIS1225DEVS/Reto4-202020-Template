@@ -43,11 +43,8 @@ operación seleccionada.
 #  Variables
 # ___________________________________________________
 
-servicefile = ''
-initialStation = None
-recursionLimit = 20000
 
-servicefile = 'bus_routes_14000.csv'
+servicefile = '201801-1-citibike-tripdata.csv'
 initialStation = None
 recursionLimit = 20000
 
@@ -73,8 +70,6 @@ def printMenu():
 
 
 
-def optionOne():
-    None
 
 def optionTwo():
     print("\nCargando información de transporte de Citibike ....")
@@ -86,12 +81,14 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+    
 
 
 def optionThree():
-        v1=input("Ingrese estación 1")
-        v2=input("Ingrese estación 2")
+        v1=input("Ingrese estación 1(id-name)\n")
+        v2=input("Ingrese estación 2(id-name)\n")
         controller.conectados_estrictamente(cont['connections'],v1,v2)
+
 
 
 def optionFour():
@@ -120,13 +117,6 @@ Menu principal
 """
 
 
-while True:
-    printMenu()
-    inputs = ('Seleccione una opcion para continuar\n>')
-
-    if int(inputs[0]) == 1:
-        executiontime = timeit.timeit(optionOne, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
 
 
 while True:
@@ -137,6 +127,7 @@ while True:
         print("\nInicializando....")
         # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
+      
 
 
     elif int(inputs[0]) == 2:
@@ -188,4 +179,5 @@ while True:
         
     else:
         sys.exit(0)
+sys.exit(0)
 
