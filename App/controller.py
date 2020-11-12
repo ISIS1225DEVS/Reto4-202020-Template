@@ -28,6 +28,15 @@ import config as cf
 from App import model
 import csv
 import timeit
+import config
+from DISClib.ADT.graph import gr
+from DISClib.ADT import map as m
+from DISClib.ADT import list as lt
+from DISClib.DataStructures import listiterator as it
+from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.Utils import error as error
+assert config
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -49,24 +58,24 @@ def init():
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
 # ___________________________________________________
-def loadTrips(citibike):
-    for filename in os.listdir(cf.data_dir):
+def loadTrips(bikes):
+    for filename in cf.file_dir(cf.data_dir):    
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
-            loadFile(analyzer, filename)
-    return analyzer
+            loadFile(bikes, filename)
+    return bikes
 
-
-def loadFile(citibike, tripfile):
+def loadFile(bikes, tripfile):
     """
     """
+    total_trips = 0
     tripfile = cf.data_dir + tripfile
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     for trip in input_file:
-        model.addTrip(citibike, trip)
-    return citibike
-
+        model.addTrip(bikes, trip)
+        total_trips += 1 
+    return [bikes,total_trips]
 
 
 # ___________________________________________________
