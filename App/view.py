@@ -70,8 +70,6 @@ def printMenu():
     print("0- Salir")
     print("------------------------------------------------------")
 
-printMenu()
-
 
 def optionTwo():
     pass
