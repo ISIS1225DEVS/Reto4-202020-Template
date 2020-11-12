@@ -23,9 +23,13 @@
  * Dario Correal
  *
  """
-import config as cf
+
+import sys
+import config
 from App import controller
-import csv
+from DISClib.ADT import stack
+import timeit
+assert config
 
 # ___________________________________________________
 #  Variables

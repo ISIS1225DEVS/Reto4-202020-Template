@@ -66,7 +66,7 @@ def loadFile(citibike, tripfile):
         model.addTrip(citibike, trip)
     return citibike
 
-def 
+
 
 # ___________________________________________________
 #  Funciones para consultas
