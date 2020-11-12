@@ -47,6 +47,10 @@ operación seleccionada.
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
+
+
+Menu principal
+"""
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
