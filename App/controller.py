@@ -65,25 +65,19 @@ def loadServices(analyzer, servicesfile):
     addRouteConnection crea conexiones entre diferentes rutas
     servidas en una misma estación.
     """
-    servicesfile = input("Ingrese nombre archivo")
-    servicesfile = "201502-citibike-tripdata.csv"
+    servicesfile = cf.data_dir + servicesfile
     input_file = csv.DictReader(open(servicesfile, encoding="utf-8"),
                                 delimiter=",")
     lastservice = None
     for service in input_file:
         if lastservice is not None:
-            samestart = lastservice['Start station'] == service['Start station']
-            samend = lastservice['End station'] == service['End station']
-            if samestart and samend:
+            sameservice = lastservice['start station name'] == service['start station name']
+            samedirection = lastservice['end station name'] == service['end station name']
+            if sameservice and samedirection:
                 model.addStopConnection(analyzer, lastservice, service)
         lastservice = service
     model.addRouteConnections(analyzer)
     return analyzer
-
-# ___________________________________________________
-#  Funciones para consultas
-# ___________________________________________________
-
 
 def totalStops(analyzer):
     """
@@ -134,6 +128,7 @@ def servedRoutes(analyzer):
     """
     maxvert, maxdeg = model.servedRoutes(analyzer)
     return maxvert, maxdeg
+
 
 def conectados_estrictamente(graph,v1,v2):
     retorno=model.estrictamente_conectados(graph,v1,v2)
