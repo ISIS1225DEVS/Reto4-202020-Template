@@ -50,7 +50,20 @@ operación seleccionada.
 
 
 Menu principal
+
+def printMenu():
+    print("\n")
+    print("*******************************************")
+    print("Bienvenido")
+    print("1- Crear estructuras de datos ")
+    print("2- Leer información")
+    print("3- Contar elementos conectados")
+    print("4- Contar elementos fuertemente conectados ")
+
 """
+Menu principal
+"""
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
