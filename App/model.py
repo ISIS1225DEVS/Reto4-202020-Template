@@ -100,10 +100,10 @@ def sameCC(sc, station1, station2):
 # ==============================
 def compareStations(station, keyvaluestop):
 
-stationcode  = keyvaluestop['key']
-if station == stationcode:
-    return 0
-elif station > stationcode:
-    return 1
-else: 
-    return -1
+    stationcode  = keyvaluestop['key']
+    if station == stationcode:
+        return 0
+    elif station > stationcode:
+        return 1
+    else: 
+        return -1
