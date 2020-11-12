@@ -24,6 +24,12 @@
  *
  """
 
+import sys
+import config
+from App import controller
+from DISClib.ADT import stack
+import timeit
+assert config
 
 # ___________________________________________________
 #  Variables
