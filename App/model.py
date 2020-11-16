@@ -31,7 +31,7 @@ from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
-from DISClib.DataStructures import edge.py as ed
+from DISClib.DataStructures import edge as ed
 
 assert config
 
