@@ -91,6 +91,10 @@ def addConnection(citibike, origin, destination, duration):
     edge = gr.getEdge(citibike['graph'], origin, destination)
     if edge is None:
         gr.addEdge(citibike['graph'], origin, destination, duration)
+    else:
+        prev_duration = int(ed.weight(edge))
+        duration += prev_duration
+        ed.updateWeight(edge, duration)
     return citibike
 
 # ==============================
