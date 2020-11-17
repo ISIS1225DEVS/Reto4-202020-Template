@@ -78,14 +78,15 @@ def optionTwo():
     controller.loadTrips(cont)
     numedges = controller.totalConnections(cont)
     numvertex = controller.totalStops(cont)
-    scc = controller.numSCC(cont)
-    print('Numero de vertices: ' + str(numvertex))
-    print('Numero de arcos: ' + str(numedges))
-    print('Numero de elementos fuertemente conectados: ' + str(scc))
+    print('Número de vértices: ' + str(numvertex))
+    print('Número de arcos: ' + str(numedges))
+    print('Límite de recursión actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
+    print('El límite de recursión se ajusta a: ' + str(recursionLimit))
 
 def optionThree():
-    pass
+    scc = controller.numSCC(cont)
+    print('Número de elementos fuertemente conectados: ' + str(scc))
 
 def optionFour():
     pass
@@ -123,9 +124,6 @@ while True:
 
     elif int(inputs[0]) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
-        #Borrar
-        print(gr.edges(cont['graph']))
-        #Hasta acá
         print("Tiempo de ejecución: " + str(executiontime))
 
     elif int(inputs[0]) == 3:
