@@ -31,6 +31,8 @@ from App import controller
 from DISClib.ADT import stack
 import timeit
 assert config
+#Borrar
+from DISClib.ADT.graph import gr
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -47,6 +49,7 @@ citibike1 = 'Data\\201801-1-citibike-tripdata.csv'
 citibike2 = 'Data\\201801-1-citibike-tripdata.csv'
 citibike3 = 'Data\\201801-1-citibike-tripdata.csv'
 citibike4 = 'Data\\201801-1-citibike-tripdata.csv'
+recursionLimit = 20000
 
 # ___________________________________________________
 #  Menu principal
@@ -121,7 +124,11 @@ while True:
         print('Numero de arcos: ' + str(numedges))
         print('Numero de elementos fuertemente conectados: ' + str(scc))
 
+        sys.setrecursionlimit(recursionLimit)
         executiontime = timeit.timeit(optionTwo, number=1)
+        #Borrar
+        print(gr.edges(cont['graph']))
+        #Hasta acá
         print("Tiempo de ejecución: " + str(executiontime))
 
     elif int(inputs[0]) == 3:
