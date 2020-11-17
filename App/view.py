@@ -75,7 +75,14 @@ def printMenu():
 
 
 def optionTwo():
-    pass
+    controller.loadTrips(cont)
+    numedges = controller.totalConnections(cont)
+    numvertex = controller.totalStops(cont)
+    scc = controller.numSCC(cont)
+    print('Numero de vertices: ' + str(numvertex))
+    print('Numero de arcos: ' + str(numedges))
+    print('Numero de elementos fuertemente conectados: ' + str(scc))
+    sys.setrecursionlimit(recursionLimit)
 
 def optionThree():
     pass
@@ -115,16 +122,6 @@ while True:
         cont = controller.init()
 
     elif int(inputs[0]) == 2:
-
-        controller.loadTrips(cont)
-        numedges = controller.totalConnections(cont)
-        numvertex = controller.totalStops(cont)
-        scc = controller.numSCC(cont)
-        print('Numero de vertices: ' + str(numvertex))
-        print('Numero de arcos: ' + str(numedges))
-        print('Numero de elementos fuertemente conectados: ' + str(scc))
-
-        sys.setrecursionlimit(recursionLimit)
         executiontime = timeit.timeit(optionTwo, number=1)
         #Borrar
         print(gr.edges(cont['graph']))
