@@ -47,6 +47,7 @@ def newAnalyzer():
     try:
         citibike = {'graph': None,
                     'stops': None,
+                    'count': None
                     #'components': None,
                     #'paths': None
                     }
@@ -59,6 +60,8 @@ def newAnalyzer():
                                         directed=True,
                                         size=1000,
                                         comparefunction=compareStations)
+        citibike['count'] = lt.newList(datastructure='SINGLE_LINKED',
+                                       cmpfunction=ed.compareedges)
 
         return citibike
     except Exception as exp:
@@ -96,7 +99,23 @@ def addConnection(citibike, origin, destination, duration):
         duration += prev_duration
         ed.updateWeight(edge, duration)
     return citibike
+"""
+def addReps(citibike, origin, destination):
+    edge = gr.getEdge(citibike['graph'], origin, destination)
+    if edge:
 
+
+    return citibike
+
+def avgDuration(citibike):
+    "
+    Actualiza el valor de los arcos al promedio de la duración de los
+    viajes entre dos estaciones
+    "
+    edges = gr.edges(citibike)
+
+    return citibike
+"""
 # ==============================
 # Funciones de consulta
 # ==============================
