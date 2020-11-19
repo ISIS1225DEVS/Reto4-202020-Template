@@ -28,6 +28,7 @@ from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
+from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
@@ -47,7 +48,7 @@ def newAnalyzer():
     try:
         citibike = {'graph': None,
                     'stops': None,
-                    'count': None
+                    'pairs': None
                     #'components': None,
                     #'paths': None
                     }
@@ -60,8 +61,9 @@ def newAnalyzer():
                                         directed=True,
                                         size=1000,
                                         comparefunction=compareStations)
-        citibike['count'] = lt.newList(datastructure='SINGLE_LINKED',
-                                       cmpfunction=ed.compareedges)
+        citibike['pairs'] = m.newMap(numelements=14000,
+                                     maptype='PROBING',
+                                     comparefunction=comparePairs)
 
         return citibike
     except Exception as exp:
@@ -78,6 +80,7 @@ def addTrip(citibike, trip):
     addStation(citibike, origin)
     addStation(citibike, destination)
     addConnection(citibike, origin, destination, duration)
+    addPairs(citibike, origin, destination)
 
 def addStation(citibike, stationid):
     """
@@ -98,24 +101,43 @@ def addConnection(citibike, origin, destination, duration):
         prev_duration = int(ed.weight(edge))
         duration += prev_duration
         ed.updateWeight(edge, duration)
+
     return citibike
-"""
-def addReps(citibike, origin, destination):
-    edge = gr.getEdge(citibike['graph'], origin, destination)
-    if edge:
 
+def addPairs(citibike, origin, destination):
+    # edge = gr.getEdge(citibike['graph'], origin, destination)
+    pair = str(origin)+','+str(destination)
+    repetitions = 0
 
+    if m.contains(citibike['pairs'], pair):
+
+        entry = m.get(citibike['pairs'], pair)
+        repetitions = entry['value']
+        m.put(citibike['pairs'], pair, repetitions+1)
+
+    else:
+        repetitions = 1
+        m.put(citibike['pairs'], pair, repetitions)
+
+    print(m.get(citibike['pairs'], pair))
     return citibike
 
 def avgDuration(citibike):
-    "
+    """
     Actualiza el valor de los arcos al promedio de la duración de los
     viajes entre dos estaciones
-    "
-    edges = gr.edges(citibike)
+    """
+    edges = gr.edges(citibike['graph'])
+    iterator = it.newIterator(edges)
 
+    while it.hasNext(iterator):
+        element = it.next(iterator)
+        pair = str(element['vertexA']) + ',' + str(element['vertexB'])
+        #entry = m.get(citibike['pairs'], pair)
+        #repetitions = entry['value']
+        #average = element['weight']/repetitions
     return citibike
-"""
+
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -158,3 +180,9 @@ def compareStations(stop, keyvaluestop):
         return 1
     else:
         return -1
+
+def comparePairs(id1, id2):
+    if (id1 == id2):
+        return 0
+    else:
+        return 1 

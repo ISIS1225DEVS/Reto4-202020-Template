@@ -59,6 +59,8 @@ def loadTrips(citibike):
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
             loadFile(citibike, filename)
+    model.avgDuration(citibike)
+    print(citibike)
     return citibike
 
 def loadFile(citibike, tripfile):
