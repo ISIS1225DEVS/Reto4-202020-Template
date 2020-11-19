@@ -133,3 +133,4 @@ def servedRoutes(analyzer):
 def conectados_estrictamente(graph,v1,v2):
     retorno=model.estrictamente_conectados(graph,v1,v2)
     return print(retorno)
+
