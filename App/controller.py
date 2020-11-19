@@ -72,8 +72,8 @@ def loadServices(analyzer, servicesfile):
     lastservice = None
     for service in input_file:
         if lastservice is not None:
-            samestart = lastservice['Start station'] == service['Start station']
-            samend = lastservice['End station'] == service['End station']
+            samestart = lastservice['Distance'] == service['Distance']
+            samend = lastservice['Direction'] == service['Direction']
             if samestart and samend:
                 model.addStopConnection(analyzer, lastservice, service)
         lastservice = service
@@ -136,5 +136,4 @@ def servedRoutes(analyzer):
     return maxvert, maxdeg
 
 def conectados_estrictamente(graph,v1,v2):
-    retorno=model.estrictamente_conectados(graph,v1,v2)
-    return print(retorno)
+    model.estrictamente_conectados(graph,v1,v2)

@@ -263,8 +263,28 @@ def formatVertex(service):
 def estrictamente_conectados(graph,v1,v2):
     retorno=scc.KosarajuSCC(graph)
     retorno2=scc.stronglyConnected(retorno,v1,v1)
-    return retorno2
+    recorrido=retorno["idscc"]["table"]["elements"]
+    contador=0
+    for elemento in recorrido:
+        for elemento2 in recorrido:
+            if elemento["key"]!=None and elemento2["key"]!=None:
+                conectados=scc.stronglyConnected(retorno,elemento["key"],elemento2["key"])
+                if conectados== True:
+                    contador+=1
+    return print(retorno2,contador)
 
+def conectados_total(grafo):
+    retorno=scc.KosarajuSCC(grafo)
+    recorrido=retorno["idscc"]["table"]["elements"]
+    contador=0
+    for elemento in recorrido:
+        for elemento2 in recorrido:
+            if elemento["key"]!=None and elemento2["key"]!=None:
+                conectados=scc.stronglyConnected(retorno,elemento["key"],elemento2["key"])
+                if conectados== True:
+                    contador+=1
+
+    return contador
 # ==============================
 # Funciones de Comparacion
 # ==============================
@@ -293,3 +313,4 @@ def compareroutes(route1, route2):
         return 1
     else:
         return -1
+
