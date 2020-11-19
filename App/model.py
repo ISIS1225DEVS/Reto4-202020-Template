@@ -1,3 +1,4 @@
+
 """
  * Copyright 2020, Departamento de sistemas y Computación
  * Universidad de Los Andes
@@ -60,7 +61,7 @@ def newAnalyzer():
                     'paths': None
                     }
 
-        analyzer['stops'] = m.newMap(numelements=14000,
+        analyzer['stops'] = m.newMap(numelements=1001,
                                      maptype='PROBING',
                                      comparefunction=compareStopIds)
 
@@ -91,6 +92,7 @@ def addStopConnection(analyzer, lastservice, service):
         origin = formatVertex(lastservice)
         destination = formatVertex(service)
         cleanServiceDistance(lastservice, service)
+        distance = float(service['tripduration']) - float(lastservice['tripduration'])
         addStop(analyzer, origin)
         addStop(analyzer, destination)
         addConnection(analyzer, origin, destination, distance)
@@ -117,14 +119,14 @@ def addRouteStop(analyzer, service):
     """
     Agrega a una estacion, una ruta que es servida en ese paradero
     """
-    entry = m.get(analyzer['stops'], service['BusStopCode'])
+    entry = m.get(analyzer['stops'], service['end station id'])
     if entry is None:
         lstroutes = lt.newList(cmpfunction=compareroutes)
-        lt.addLast(lstroutes, service['ServiceNo'])
-        m.put(analyzer['stops'], service['BusStopCode'], lstroutes)
+        lt.addLast(lstroutes, service['end station name'])
+        m.put(analyzer['stops'], service['end station id'], lstroutes)
     else:
         lstroutes = entry['value']
-        info = service['ServiceNo']
+        info = service['end station name']
         if not lt.isPresent(lstroutes, info):
             lt.addLast(lstroutes, info)
     return analyzer
@@ -156,99 +158,21 @@ def addConnection(analyzer, origin, destination, distance):
     """
     Adiciona un arco entre dos estaciones
     """
+
     edge = gr.getEdge(analyzer['connections'], origin, destination)
     if edge is None:
         gr.addEdge(analyzer['connections'], origin, destination, distance)
     return analyzer
-
-# ==============================
-# Funciones de consulta
-# ==============================
-
-
-def connectedComponents(analyzer):
-    """
-    Calcula los componentes conectados del grafo
-    Se utiliza el algoritmo de Kosaraju
-    """
-    analyzer['components'] = scc.KosarajuSCC(analyzer['connections'])
-    return scc.connectedComponents(analyzer['components'])
-
-
-def minimumCostPaths(analyzer, initialStation):
-    """
-    Calcula los caminos de costo mínimo desde la estacion initialStation
-    a todos los demas vertices del grafo
-    """
-    analyzer['paths'] = djk.Dijkstra(analyzer['connections'], initialStation)
-    return analyzer
-
-
-def hasPath(analyzer, destStation):
-    """
-    Indica si existe un camino desde la estacion inicial a la estación destino
-    Se debe ejecutar primero la funcion minimumCostPaths
-    """
-    return djk.hasPathTo(analyzer['paths'], destStation)
-
-
-def minimumCostPath(analyzer, destStation):
-    """
-    Retorna el camino de costo minimo entre la estacion de inicio
-    y la estacion destino
-    Se debe ejecutar primero la funcion minimumCostPaths
-    """
-    path = djk.pathTo(analyzer['paths'], destStation)
-    return path
-
-
-def totalStops(analyzer):
-    """
-    Retorna el total de estaciones (vertices) del grafo
-    """
-    return gr.numVertices(analyzer['connections'])
-
-
-def totalConnections(analyzer):
-    """
-    Retorna el total arcos del grafo
-    """
-    return gr.numEdges(analyzer['connections'])
-
-
-def servedRoutes(analyzer):
-    """
-    Retorna la estación que sirve a mas rutas.
-    Si existen varias rutas con el mismo numero se
-    retorna una de ellas
-    """
-    lstvert = m.keySet(analyzer['stops'])
-    itlstvert = it.newIterator(lstvert)
-    maxvert = None
-    maxdeg = 0
-    while(it.hasNext(itlstvert)):
-        vert = it.next(itlstvert)
-        lstroutes = m.get(analyzer['stops'], vert)['value']
-        degree = lt.size(lstroutes)
-        if(degree > maxdeg):
-            maxvert = vert
-            maxdeg = degree
-    return maxvert, maxdeg
-
-
-# ==============================
-# Funciones Helper
-# ==============================
 
 def cleanServiceDistance(lastservice, service):
     """
     En caso de que el archivo tenga un espacio en la
     distancia, se reemplaza con cero.
     """
-    if service['Distance'] == '':
-        service['Distance'] = 0
-    if lastservice['Distance'] == '':
-        lastservice['Distance'] = 0
+    if service['tripduration'] == '':
+        service['tripduration'] = 0
+    if lastservice['tripduration'] == '':
+        lastservice['tripduration'] = 0
 
 
 def formatVertex(service):
@@ -256,10 +180,10 @@ def formatVertex(service):
     Se formatea el nombrer del vertice con el id de la estación
     seguido de la ruta.
     """
-    name = service['BusStopCode'] + '-'
-    name = name + service['ServiceNo']
+    name = service['end station id'] + '-'
+    name = name + service['end station name']
     return name
-
+  
 def estrictamente_conectados(graph,v1,v2):
     retorno=scc.KosarajuSCC(graph)
     retorno2=scc.stronglyConnected(retorno,v1,v1)
@@ -285,6 +209,7 @@ def conectados_total(grafo):
                     contador+=1
 
     return contador
+
 # ==============================
 # Funciones de Comparacion
 # ==============================
@@ -314,3 +239,37 @@ def compareroutes(route1, route2):
     else:
         return -1
 
+
+def totalStops(analyzer):
+    """
+    Retorna el total de estaciones (vertices) del grafo
+    """
+    return gr.numVertices(analyzer['connections'])
+
+
+def totalConnections(analyzer):
+    """
+    Retorna el total arcos del grafo
+    """
+    return gr.numEdges(analyzer['connections'])
+
+
+
+def estrictamente_conectados(graph,v1,v2):
+    retorno=scc.KosarajuSCC(graph)
+    retorno2=scc.stronglyConnected(retorno,v1,v1)
+    total=conectados_total
+    return print(retorno2,conectados_total)
+
+def conectados_total(grafo):
+    retorno=scc.KosarajuSCC(grafo)
+    recorrido=retorno["idscc"]["table"]["elements"]
+    contador=0
+    for elemento in recorrido:
+        for elemento2 in recorrido:
+            if elemento["key"]!=None and elemento2["key"]!=None:
+                conectados=scc.stronglyConnected(retorno,elemento["key"],elemento2["key"])
+                if conectados== True:
+                    contador+=1
+
+    return contador

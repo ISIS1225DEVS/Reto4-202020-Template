@@ -44,7 +44,7 @@ operación seleccionada.
 # ___________________________________________________
 
 
-servicefile = 'bus_routes_14000.csv'
+servicefile = '201801-1-citibike-tripdata.csv'
 initialStation = None
 recursionLimit = 20000
 
@@ -57,10 +57,18 @@ def printMenu():
     print("\n")
     print("*******************************************")
     print("Bienvenido")
-    print("1- Inicializar Analizador")
-    print("2- Cargar información Citibike")
-    print("3- Calcular Cluster")
-    print("*******************************************")
+    print("1- Crear estructuras de datos")
+    print("2- Cargar informacion")
+    print("3- Buscar cantidad de cluster de Viajes")
+    print("4- Buscar ruta turistica Circular")
+    print("5- Buscar ruta turistica de menor tiempo")
+    print("6- Buscar ruta turistica por resistencia")
+    print("7- Buscar ruta mas corta entre estaciones")
+    print("8- Buscar ruta de interes turístico")
+    print("9- Buscar estaciones para publicidad e identificacion de Bicicletas para mantenimiento")
+    print("10- Buscar bicicletas para mantenimiento")
+
+
 
 
 def optionTwo():
@@ -73,16 +81,44 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+    
 
 
 def optionThree():
-        v1=input("Ingrese estación 1")
-        v2=input("Ingrese estación 2")
+        v1=input("Ingrese estación 1(id-name)\n")
+        v2=input("Ingrese estación 2(id-name)\n")
         controller.conectados_estrictamente(cont['connections'],v1,v2)
+
+
+
+def optionFour():
+    None
+
+def optionFive():
+    None
+
+def optionSix():
+    None
+
+def optionSeven():
+    None
+
+def optionEight():
+    None
+
+def optionNine():
+    None
+
+def optionTen():
+    None
 
 """
 Menu principal
 """
+
+
+
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
@@ -91,15 +127,57 @@ while True:
         print("\nInicializando....")
         # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
+      
+
 
     elif int(inputs[0]) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
+
+
     elif int(inputs[0]) == 3:
         optionThree()
         executiontime = timeit.timeit(optionThree, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
+
+
+    elif int(inputs[0]) == 4:
+        executiontime = timeit.timeit(optionFour, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+
+    elif int(inputs[0]) == 5:
+        executiontime = timeit.timeit(optionFive, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+
+    elif int(inputs[0]) == 6:
+        executiontime = timeit.timeit(optionSix, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+
+    elif int(inputs[0]) == 7:
+        executiontime = timeit.timeit(optionSeven, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+
+    elif int(inputs[0]) == 8:
+        executiontime = timeit.timeit(optionEight, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+
+    elif int(inputs[0]) == 9:
+        executiontime = timeit.timeit(optionNine, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    
+    elif int(inputs[0]) == 10:
+        executiontime = timeit.timeit(optionTen, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+        
     else:
         sys.exit(0)
 sys.exit(0)
+
