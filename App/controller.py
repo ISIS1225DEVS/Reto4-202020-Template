@@ -60,7 +60,7 @@ def loadTrips(citibike):
             print('Cargando archivo: ' + filename)
             loadFile(citibike, filename)
     model.avgDuration(citibike)
-    print(citibike)
+
     return citibike
 
 def loadFile(citibike, tripfile):

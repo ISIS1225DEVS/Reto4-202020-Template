@@ -106,20 +106,25 @@ def addConnection(citibike, origin, destination, duration):
 
 def addPairs(citibike, origin, destination):
     # edge = gr.getEdge(citibike['graph'], origin, destination)
-    pair = str(origin)+','+str(destination)
     repetitions = 0
-
-    if m.contains(citibike['pairs'], pair):
-
-        entry = m.get(citibike['pairs'], pair)
-        repetitions = entry['value']
-        m.put(citibike['pairs'], pair, repetitions+1)
-
+    pair = str(origin)+','+str(destination) # Creo la llave compuesta por: 
+                                            # string con los ids de las estaciones
+                                            # de origen concatenadas y separadas
+                                            # por una coma ','
+    repetitions = 0
+    entry = me.newMapEntry(pair, repetitions)
+    
+    if entry['value'] >= 1:
+        repetitions = entry['value'] + 1
+        me.setValue(entry, repetitions)
+        print(entry)
+        
     else:
         repetitions = 1
-        m.put(citibike['pairs'], pair, repetitions)
+        entry = me.newMapEntry(pair, repetitions)
+        me.setKey(entry,pair)
 
-    print(m.get(citibike['pairs'], pair))
+    #print(m.get(citibike['pairs'], pair))
     return citibike
 
 def avgDuration(citibike):
@@ -185,4 +190,4 @@ def comparePairs(id1, id2):
     if (id1 == id2):
         return 0
     else:
-        return 1 
+        return 1
