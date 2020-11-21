@@ -81,7 +81,10 @@ def optionFour():
     pass
 
 def optionFive():
-    pass
+    retorno = controller.ejecutarreq3(cont)
+    print ('Las Estaciones con más llegadas son: ', retorno[0])
+    print ('Las Estaciones con más salidas son: ', retorno[1])
+    print ('Las Estaciones con menos llegadas y salidas son: ', retorno[2])
 
 def optionSix():
     pass

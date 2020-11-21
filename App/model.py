@@ -102,6 +102,103 @@ def req1 (citibike, station1, station2):
     strongly = scc.stronglyConnected(sc, station1, station2)
     return (num,strongly)
 
+def req3 (citibike):
+    lstArrival = []
+    lstDeparture = []
+    diccLeast = {}
+    lstLeast = []
+
+    for i in citibike['graph']['indegree']['table']['elements']:
+        if i['key'] != None:
+            diccLeast[i['key']] = i['value']
+            if len(lstArrival) < 3:
+                lstArrival.append(i)
+            else : 
+                for j in lstArrival:
+                    if i == j:
+                        j['value'] = j.get('value') + i['value']
+                    elif i['value'] > j['value']:
+                        lstArrival.append(i)
+                        lstArrival.remove(j)
+                        break
+
+
+    for i in citibike['graph']['vertices']['table']['elements']:
+        if i['key'] != None:
+            if i['key'] not in diccLeast.keys():
+                diccLeast[i['key']] = lt.size(i['value'])
+            else:
+                diccLeast[i['key']] = diccLeast.get(i['key']) + lt.size(i['value'])
+
+            if len(lstDeparture) < 3:
+                lstDeparture.append({'key': i['key'], 'value':lt.size(i['value'])})
+            else : 
+                for j in lstDeparture:
+                    if lt.size(i['value']) > j['value']:
+                        lstDeparture.append({'key': i['key'], 'value':lt.size(i['value'])})
+                        lstDeparture.remove(j)
+                        break
+    
+    for i in diccLeast:
+        if len(lstLeast) < 3:
+                lstLeast.append((i,diccLeast[i]))
+        else: 
+            for j in lstLeast:
+                if diccLeast[i] < j[1]:
+                    lstLeast.append((i,diccLeast[i]))
+                    lstLeast.remove(j)
+                    break
+
+    return (lstArrival,lstDeparture,lstLeast)
+
+   
+def req6(analyzer, lat_centro, lon_centro, radio):
+
+    iterator = it.newIterator(analyzer['accidentes'])
+    while it.hasNext(iterator):
+        element = it.next(iterator)
+        haver_entrada = (math.sin(math.radians((float(element['Start_Lat']) - lat_centro)) / 2))**2 \
+                        + math.cos(math.radians(float(element['Start_Lat']))) \
+                        * math.cos(math.radians(float(element['Start_Lat']))) \
+                        * (math.sin(math.radians((float(element['Start_Lng']) - lon_centro)) / 2))**2
+        d = 2*6371*math.asin(math.sqrt(haver_entrada))
+        if d <= radio:
+            total += 1
+            occurreddate = element['Start_Time']
+            accidentdate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
+            if accidentdate.weekday() == 0:
+                dias['Lunes'] += 1
+            elif accidentdate.weekday() == 1:
+                dias['Martes'] += 1
+            elif accidentdate.weekday() == 2:
+                dias['Miercoles'] += 1
+            elif accidentdate.weekday() == 3:
+                dias['Jueves'] += 1
+            elif accidentdate.weekday() == 4:
+                dias['Viernes'] += 1
+            elif accidentdate.weekday() == 5:
+                dias['Sabado'] += 1
+            elif accidentdate.weekday() == 6:
+                dias['Domingo'] += 1
+    return (total, dias)
+'''
+'''
+    for i in citibike['graph']['outdegree']['table']['elements']:
+        if i['key'] != None:
+            if i['key'] not in diccLeast.keys():
+                diccLeast[i['key']] = i['value']
+            else:
+                diccLeast[i['key']] = diccLeas.get(i['key']) + i['value']
+            if len(lst) < 4:
+                lstDeparture.append(i)
+            else : 
+                for j in lstDeparture:
+                    if i['value'] > j['value']:
+                        lstDeparture.append(i)
+                        lstDeparture.remove(j)
+    
+    
+
 def numSCC(graph):
     sc = scc.KosarajuSCC(graph['graph'])
     return scc.connectedComponents(sc)

@@ -72,6 +72,19 @@ def loadFile(citibike, tripfile):
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+def ejecutarreq3 (citibike):
+    retorno = model.req3(citibike)
+    a = []
+    b = []
+    c = []
+    for j in retorno[0]:
+        a.append('La estación '+ str(j['key']) + ' con '+ str(j['value']) + ' llegadas')
+    for j in retorno[1]:
+        b.append('La estación '+ str(j['key']) + ' con '+ str(j['value']) + ' salidas')
+    for j in retorno[2]:
+        c.append('La estación '+ str(j[0]) + ' con '+ str(j[1]) + ' llegadas')
+    return (a,b,c)
+    
 
 def totalConnections(analyzer):
     """
