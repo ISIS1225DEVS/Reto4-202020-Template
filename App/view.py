@@ -28,6 +28,7 @@
 import sys
 import config
 from App import controller
+from App import model
 from DISClib.ADT import stack
 import timeit
 assert config
@@ -93,7 +94,7 @@ def optionSeven():
     pass
 
 def optionEight():
-    pass
+    model.req6(cont, 40,-74,40,-74)
 
 def optionNine():
     pass

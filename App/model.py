@@ -24,6 +24,7 @@
  *
  """
 import config
+import math
 from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.ADT import list as lt
@@ -71,9 +72,15 @@ def addTrip(citibike, trip):
     origin = trip['start station id']
     destination = trip['end station id']
     duration = int(trip['tripduration'])
+    latitude1 = float(trip['start station latitude'])
+    longitude1 = float(trip['start station longitude'])
+    latitude2 = float(trip['end station latitude'])
+    longitude2 = float(trip['end station longitude'])
     addStation(citibike, origin)
     addStation(citibike, destination)
     addConnection(citibike, origin, destination, duration)
+    addStop(citibike, origin, latitude1, longitude1)
+    addStop(citibike, destination, latitude2, longitude2)
 
 def addStation(citibike, stationid):
     """
@@ -90,6 +97,11 @@ def addConnection(citibike, origin, destination, duration):
     edge = gr.getEdge(citibike['graph'], origin, destination)
     if edge is None:
         gr.addEdge(citibike['graph'], origin, destination, duration)
+    return citibike
+
+def addStop(citibike, stationid, latitude, longitude):
+    if not m.contains(citibike['stops'], stationid):
+        m.put(citibike['stops'], stationid, (latitude,longitude))
     return citibike
 
 # ==============================
@@ -152,50 +164,37 @@ def req3 (citibike):
     return (lstArrival,lstDeparture,lstLeast)
 
    
-def req6(analyzer, lat_centro, lon_centro, radio):
+def req6(citibike, lat1, lon1, lat2, lon2):
+    iterador = it.newIterator(m.keySet(citibike['stops']))
+    radio_salida = 10000
+    radio_llegada = 10000
+    estacion_salida = ''
+    estacion_llegada = ''
+    while it.hasNext(iterador):
+        llave = it.next(iterador)
+        diccCoord = m.get(citibike['stops'],llave)
+        lat = diccCoord['value'][0]
+        lon = diccCoord['value'][1]
+        haver_salida = (math.sin(math.radians((lat - lat1)) / 2))**2 \
+                        + math.cos(math.radians(lat)) \
+                        * math.cos(math.radians(lat)) \
+                        * (math.sin(math.radians((lon - lon1)) / 2))**2
+        d_s = 2*6371*math.asin(math.sqrt(haver_salida))
+        if d_s <= radio_salida:
+            radio_salida = d_s
+            estacion_salida = diccCoord['key']
 
-    iterator = it.newIterator(analyzer['accidentes'])
-    while it.hasNext(iterator):
-        element = it.next(iterator)
-        haver_entrada = (math.sin(math.radians((float(element['Start_Lat']) - lat_centro)) / 2))**2 \
-                        + math.cos(math.radians(float(element['Start_Lat']))) \
-                        * math.cos(math.radians(float(element['Start_Lat']))) \
-                        * (math.sin(math.radians((float(element['Start_Lng']) - lon_centro)) / 2))**2
-        d = 2*6371*math.asin(math.sqrt(haver_entrada))
-        if d <= radio:
-            total += 1
-            occurreddate = element['Start_Time']
-            accidentdate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
-            if accidentdate.weekday() == 0:
-                dias['Lunes'] += 1
-            elif accidentdate.weekday() == 1:
-                dias['Martes'] += 1
-            elif accidentdate.weekday() == 2:
-                dias['Miercoles'] += 1
-            elif accidentdate.weekday() == 3:
-                dias['Jueves'] += 1
-            elif accidentdate.weekday() == 4:
-                dias['Viernes'] += 1
-            elif accidentdate.weekday() == 5:
-                dias['Sabado'] += 1
-            elif accidentdate.weekday() == 6:
-                dias['Domingo'] += 1
-    return (total, dias)
-'''
-'''
-    for i in citibike['graph']['outdegree']['table']['elements']:
-        if i['key'] != None:
-            if i['key'] not in diccLeast.keys():
-                diccLeast[i['key']] = i['value']
-            else:
-                diccLeast[i['key']] = diccLeas.get(i['key']) + i['value']
-            if len(lst) < 4:
-                lstDeparture.append(i)
-            else : 
-                for j in lstDeparture:
-                    if i['value'] > j['value']:
-                        lstDeparture.append(i)
-                        lstDeparture.remove(j)
+        haver_llegada = (math.sin(math.radians((lat - lat2)) / 2))**2 \
+                        + math.cos(math.radians(lat)) \
+                        * math.cos(math.radians(lat)) \
+                        * (math.sin(math.radians((lon - lon2)) / 2))**2
+        d_ll = 2*6371*math.asin(math.sqrt(haver_llegada))
+        if d_ll <= radio_llegada:
+            radio_llegada = d_ll
+            estacion_llegada = diccCoord['key']
+
+    print (estacion_llegada, estacion_salida)
+
     
     
 
