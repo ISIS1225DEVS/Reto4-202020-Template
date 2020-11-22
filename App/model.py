@@ -163,7 +163,9 @@ def req3 (citibike):
 
     return (lstArrival,lstDeparture,lstLeast)
 
-   
+def req5 (citibike, birth_year):
+
+
 def req6(citibike, lat1, lon1, lat2, lon2):
     iterador = it.newIterator(m.keySet(citibike['stops']))
     radio_salida = 10000
@@ -193,7 +195,7 @@ def req6(citibike, lat1, lon1, lat2, lon2):
             radio_llegada = d_ll
             estacion_llegada = diccCoord['key']
 
-    print (estacion_llegada, estacion_salida)
+    print (estacion_salida, estacion_llegada)
 
     
     
