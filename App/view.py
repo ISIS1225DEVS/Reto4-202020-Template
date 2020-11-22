@@ -91,7 +91,17 @@ def optionSix():
     pass
 
 def optionSeven():
-    pass
+    model.req5(cont, 1)
+    model.req5(cont, 11)
+    model.req5(cont, 21)
+    model.req5(cont, 31)
+    model.req5(cont, 41)
+    model.req5(cont, 51)
+    model.req5(cont, 61)
+    model.req5(cont, 17)
+    model.req5(cont, 71)
+    model.req5(cont, 37)
+
 
 def optionEight():
     model.req6(cont, 41,-75,40,-74)

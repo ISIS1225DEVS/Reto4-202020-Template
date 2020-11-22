@@ -82,7 +82,7 @@ def ejecutarreq3 (citibike):
     for j in retorno[1]:
         b.append('La estación '+ str(j['key']) + ' con '+ str(j['value']) + ' salidas')
     for j in retorno[2]:
-        c.append('La estación '+ str(j[0]) + ' con '+ str(j[1]) + ' llegadas')
+        c.append('La estación '+ str(j[0]) + ' con '+ str(j[1]) + ' llegadas y salidas')
     return (a,b,c)
     
 

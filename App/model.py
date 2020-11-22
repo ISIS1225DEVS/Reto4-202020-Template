@@ -76,11 +76,12 @@ def addTrip(citibike, trip):
     longitude1 = float(trip['start station longitude'])
     latitude2 = float(trip['end station latitude'])
     longitude2 = float(trip['end station longitude'])
+    edad = 2020 - int(trip['birth year'])
     addStation(citibike, origin)
     addStation(citibike, destination)
     addConnection(citibike, origin, destination, duration)
-    addStop(citibike, origin, latitude1, longitude1)
-    addStop(citibike, destination, latitude2, longitude2)
+    addStop(citibike, origin, latitude1, longitude1, edad, 's')
+    addStop(citibike, destination, latitude2, longitude2, edad, 'll')
 
 def addStation(citibike, stationid):
     """
@@ -99,9 +100,53 @@ def addConnection(citibike, origin, destination, duration):
         gr.addEdge(citibike['graph'], origin, destination, duration)
     return citibike
 
-def addStop(citibike, stationid, latitude, longitude):
-    if not m.contains(citibike['stops'], stationid):
-        m.put(citibike['stops'], stationid, (latitude,longitude))
+def addStop(citibike, stationid, latitude, longitude, edad, s_ll):
+    if m.contains(citibike['stops'], stationid):
+        retorno = m.get(citibike['stops'], stationid)['value']
+        m.remove(citibike['stops'], stationid)
+    else:
+        retorno = [latitude,longitude,{'0-10':0,
+                                '11-20':0,
+                                '21-30':0,
+                                '31-40':0,
+                                '41-50':0,
+                                '51-60':0,
+                                '60+':0}, {'0-10':0,
+                                        '11-20':0,
+                                        '21-30':0,
+                                        '31-40':0,
+                                        '41-50':0,
+                                        '51-60':0,
+                                        '60+':0}]
+    if s_ll == 's':
+        a = 2
+    else:
+        a = 3   
+
+    if edad in range(0,11):
+        nuevo = retorno[a].get('0-10') + 1
+        retorno[a]['0-10'] = nuevo
+    elif edad in range(11,21):
+        nuevo = retorno[a].get('11-20') + 1
+        retorno[a]['11-20'] = nuevo
+    elif edad in range(21,31):
+        nuevo = retorno[a].get('21-30') + 1
+        retorno[a]['21-30'] = nuevo
+    elif edad in range(31,41):
+        nuevo = retorno[a].get('31-40') + 1
+        retorno[a]['31-40'] = nuevo
+    elif edad in range(41,51):
+        nuevo = retorno[a].get('41-50') + 1
+        retorno[a]['41-50'] = nuevo
+    elif edad in range(51,61):
+        nuevo = retorno[a].get('51-60') + 1
+        retorno[a]['51-60'] = nuevo
+    else: 
+        nuevo = retorno[a].get('60+') + 1
+        retorno[a]['60+'] = nuevo
+
+    m.put(citibike['stops'], stationid, retorno)
+
     return citibike
 
 # ==============================
@@ -163,7 +208,41 @@ def req3 (citibike):
 
     return (lstArrival,lstDeparture,lstLeast)
 
-def req5 (citibike, birth_year):
+def req5 (citibike, edad):
+
+    if edad in range(0,11):
+        key = '0-10'
+    elif edad in range(11,21):
+        key = '11-20'
+    elif edad in range(21,31):
+        key = '21-30'
+    elif edad in range(31,41):
+        key = '31-40'
+    elif edad in range(41,51):
+        key = '41-50'
+    elif edad in range(51,61):
+        key = '51-60'
+    else:
+        key = '60+'
+
+    iterador = it.newIterator(m.keySet(citibike['stops']))
+    estacion_salida = 'Ninguna'
+    max_salida = 0
+    estacion_llegada = 'Ninguna'
+    max_llegada = 0
+    while it.hasNext(iterador):
+        element = it.next(iterador)
+        dicc = m.get(citibike['stops'],element)
+        salida = dicc['value'][2]
+        llegada = dicc['value'][3]
+        if salida[key] > max_salida:
+            max_salida = salida[key]
+            estacion_salida = dicc['key']
+        if llegada[key] > max_llegada:
+            max_llegada = llegada[key]
+            estacion_llegada = dicc['key']
+
+    print (estacion_salida,estacion_llegada)
 
 
 def req6(citibike, lat1, lon1, lat2, lon2):
