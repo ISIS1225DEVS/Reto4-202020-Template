@@ -44,7 +44,8 @@ operación seleccionada.
 # ___________________________________________________
 
 
-servicefile = '201801-1-citibike-tripdata.csv'
+servicefile = '201801-2-citibike-tripdata.csv'
+
 initialStation = None
 recursionLimit = 20000
 
@@ -57,7 +58,7 @@ def printMenu():
     print("\n")
     print("*******************************************")
     print("Bienvenido")
-    print("1- Crear estructuras de datos")
+    print("1- Inicializar Analizador")
     print("2- Cargar informacion")
     print("3- Buscar cantidad de cluster de Viajes")
     print("4- Buscar ruta turistica Circular")
@@ -67,13 +68,12 @@ def printMenu():
     print("8- Buscar ruta de interes turístico")
     print("9- Buscar estaciones para publicidad e identificacion de Bicicletas para mantenimiento")
     print("10- Buscar bicicletas para mantenimiento")
-
-
+    print("0- Exit")
 
 
 def optionTwo():
-    print("\nCargando información de transporte de Citibike ....")
-    controller.loadServices(cont, servicefile)
+    print("\nCargando información de transporte de singapur ....")
+    controller.loadTrips(cont)
     numedges = controller.totalConnections(cont)
     numvertex = controller.totalStops(cont)
     print('Numero de vertices: ' + str(numvertex))
@@ -82,71 +82,87 @@ def optionTwo():
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
     
-
-
+    
 def optionThree():
         v1=input("Ingrese estación 1(id-name)\n")
         v2=input("Ingrese estación 2(id-name)\n")
         controller.conectados_estrictamente(cont['connections'],v1,v2)
 
 
+def optionFourOne(graph, vertex, initialTime, finalTime):
+    routesNumber = controller.findCircularRoutesList(graph, vertex, initialTime, finalTime)
+    return lt.size(routesNumber)
 
-def optionFour():
-    None
+  
+def optionFourTwo(graph, vertex, initialTime, finalTime):
+    routesList = controller.findCircularRoutesList(graph, vertex, initialTime, finalTime)
+    return routesList
+
 
 def optionFive():
     None
 
+
 def optionSix():
     None
+
 
 def optionSeven():
     None
 
+
 def optionEight():
     None
+
 
 def optionNine():
     None
 
+
 def optionTen():
     None
+
 
 """
 Menu principal
 """
 
 
-
-
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
 
+    
     if int(inputs[0]) == 1:
         print("\nInicializando....")
-        # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
-      
 
-
+        
     elif int(inputs[0]) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-
-
+        
     elif int(inputs[0]) == 3:
-        optionThree()
+        id_1 = input("Ingrese id de estación de partida: ")
+        id_2 = input("Ingrese id de estación de llegada: ")
+        optionThree(id_1, id_2)
         executiontime = timeit.timeit(optionThree, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-
+        
     elif int(inputs[0]) == 4:
-        executiontime = timeit.timeit(optionFour, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        print('Los tiempos presentados calculan un estimado de 20 minutos que podrá destinar para conocer cada parada')
+        vertex = input('Estación de partida: ')
+        initialTime = input('Tiempo mínimo disponible para el recorrido en minutos: ')
+        finalTime = input('Tiempo máximo disponible para el recorrido en minutos: ')
+        numeroRutas = optionFourOne(graph, vertex, initialTime, finalTime)
+        listaRutas = optionFourTwo(graph, vertex, initialTime, finalTime)
+        print('Se han encontrado ' + numeroRutas + ' rutas.')
+        print('Lista de las opciones: \n')
+        print(listaRutas)
 
-
+        
     elif int(inputs[0]) == 5:
         executiontime = timeit.timeit(optionFive, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
