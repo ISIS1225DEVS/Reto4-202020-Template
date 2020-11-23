@@ -57,6 +57,7 @@ def init():
 # ___________________________________________________
 
 
+
 def loadTrips(citibike):
 
     for citibike_file in os.listdir(cf.data_dir):
@@ -73,10 +74,6 @@ def loadFile(citibike, tripfile):
     for trip in input_file:
         model.addTrip(citibike, trip)
     return citibike
-
-# ___________________________________________________
-#  Funciones para consultas
-# ___________________________________________________
 
 
 def totalStops(analyzer):
@@ -129,9 +126,12 @@ def servedRoutes(analyzer):
     maxvert, maxdeg = model.servedRoutes(analyzer)
     return maxvert, maxdeg
 
+
 def conectados_estrictamente(graph,v1,v2):
     retorno=model.estrictamente_conectados(graph,v1,v2)
     return print(retorno)
 
+
 def findCircularRoutesList(grafo, vertice, tiempoInicial, tiempoFinal):
     return model.createCicleUnderTime(grafo, vertice, tiempoInicial, tiempoFinal)
+

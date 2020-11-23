@@ -43,7 +43,9 @@ operación seleccionada.
 #  Variables
 # ___________________________________________________
 
+
 servicefile = '201801-2-citibike-tripdata.csv'
+
 initialStation = None
 recursionLimit = 20000
 
@@ -79,11 +81,11 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
-
-
-def optionThree(id_1, id_2):
-        id_1="15221-10"
-        id_2="94079-10"
+    
+    
+def optionThree():
+        v1=input("Ingrese estación 1(id-name)\n")
+        v2=input("Ingrese estación 2(id-name)\n")
         controller.conectados_estrictamente(cont['connections'],v1,v2)
 
 
@@ -91,7 +93,7 @@ def optionFourOne(graph, vertex, initialTime, finalTime):
     routesNumber = controller.findCircularRoutesList(graph, vertex, initialTime, finalTime)
     return lt.size(routesNumber)
 
-
+  
 def optionFourTwo(graph, vertex, initialTime, finalTime):
     routesList = controller.findCircularRoutesList(graph, vertex, initialTime, finalTime)
     return routesList
@@ -125,22 +127,22 @@ def optionTen():
 Menu principal
 """
 
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
 
-
+    
     if int(inputs[0]) == 1:
         print("\nInicializando....")
         cont = controller.init()
 
-
+        
     elif int(inputs[0]) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-
-
+        
     elif int(inputs[0]) == 3:
         id_1 = input("Ingrese id de estación de partida: ")
         id_2 = input("Ingrese id de estación de llegada: ")
@@ -148,7 +150,7 @@ while True:
         executiontime = timeit.timeit(optionThree, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
-
+        
     elif int(inputs[0]) == 4:
         print('Los tiempos presentados calculan un estimado de 20 minutos que podrá destinar para conocer cada parada')
         vertex = input('Estación de partida: ')
@@ -160,7 +162,7 @@ while True:
         print('Lista de las opciones: \n')
         print(listaRutas)
 
-
+        
     elif int(inputs[0]) == 5:
         executiontime = timeit.timeit(optionFive, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
@@ -193,4 +195,5 @@ while True:
         
     else:
         sys.exit(0)
+sys.exit(0)
 

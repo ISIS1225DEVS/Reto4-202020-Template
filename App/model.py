@@ -1,3 +1,4 @@
+
 """
  * Copyright 2020, Departamento de sistemas y Computación
  * Universidad de Los Andes
@@ -69,7 +70,7 @@ def newAnalyzer():
                     'paths': None
                     }
 
-        analyzer['stops'] = m.newMap(numelements=14000,
+        analyzer['stops'] = m.newMap(numelements=1001,
                                      maptype='PROBING',
                                      comparefunction=compareStopIds)
 
@@ -82,9 +83,7 @@ def newAnalyzer():
         error.reraise(exp, 'model:newAnalyzer')
 
 
-
 # Funciones para agregar informacion al grafo
-
 
 
 def loadTrips(citibike):
@@ -142,7 +141,7 @@ def addConnection(citibike, origin, destination, duration):
 
     return citibike
 
-
+  
 def addStopConnection(analyzer, lastservice, service):
     """
     Adiciona las estaciones al grafo como vertices y arcos entre las
@@ -159,7 +158,7 @@ def addStopConnection(analyzer, lastservice, service):
         origin = formatVertex(lastservice)
         destination = formatVertex(service)
         cleanServiceDistance(lastservice, service)
-        distance = float(service['Distance']) - float(lastservice['Distance'])
+        distance = float(service['tripduration']) - float(lastservice['tripduration'])
         addStop(analyzer, origin)
         addStop(analyzer, destination)
         addConnection(analyzer, origin, destination, distance)
@@ -186,14 +185,14 @@ def addRouteStop(analyzer, service):
     """
     Agrega a una estacion, una ruta que es servida en ese paradero
     """
-    entry = m.get(analyzer['stops'], service['BusStopCode'])
+    entry = m.get(analyzer['stops'], service['end station id'])
     if entry is None:
         lstroutes = lt.newList(cmpfunction=compareroutes)
-        lt.addLast(lstroutes, service['ServiceNo'])
-        m.put(analyzer['stops'], service['BusStopCode'], lstroutes)
+        lt.addLast(lstroutes, service['end station name'])
+        m.put(analyzer['stops'], service['end station id'], lstroutes)
     else:
         lstroutes = entry['value']
-        info = service['ServiceNo']
+        info = service['end station name']
         if not lt.isPresent(lstroutes, info):
             lt.addLast(lstroutes, info)
     return analyzer
@@ -219,7 +218,7 @@ def addRouteConnections(analyzer):
                 addConnection(analyzer, prevrout, route, 0)
                 addConnection(analyzer, route, prevrout, 0)
             prevrout = route
-
+            
 
 # ==============================
 # Funciones de consulta
@@ -242,8 +241,8 @@ def minimumCostPaths(analyzer, initialStation):
     """
     analyzer['paths'] = djk.Dijkstra(analyzer['connections'], initialStation)
     return analyzer
-
-
+  
+  
 def hasPath(analyzer, destStation):
     """
     Indica si existe un camino desde la estacion inicial a la estación destino
@@ -316,10 +315,10 @@ def cleanServiceDistance(lastservice, service):
     En caso de que el archivo tenga un espacio en la
     distancia, se reemplaza con cero.
     """
-    if service['Distance'] == '':
-        service['Distance'] = 0
-    if lastservice['Distance'] == '':
-        lastservice['Distance'] = 0
+    if service['tripduration'] == '':
+        service['tripduration'] = 0
+    if lastservice['tripduration'] == '':
+        lastservice['tripduration'] = 0
 
 
 def formatVertex(service):
@@ -327,15 +326,23 @@ def formatVertex(service):
     Se formatea el nombrer del vertice con el id de la estación
     seguido de la ruta.
     """
-    name = service['BusStopCode'] + '-'
-    name = name + service['ServiceNo']
+    name = service['end station id'] + '-'
+    name = name + service['end station name']
     return name
-
+  
 def estrictamente_conectados(graph,v1,v2):
     retorno=scc.KosarajuSCC(graph)
     retorno2=scc.stronglyConnected(retorno,v1,v1)
-    total=conectados_total
-    return print(retorno2,conectados_total)
+    recorrido=retorno["idscc"]["table"]["elements"]
+    contador=0
+    for elemento in recorrido:
+        for elemento2 in recorrido:
+            if elemento["key"]!=None and elemento2["key"]!=None:
+                conectados=scc.stronglyConnected(retorno,elemento["key"],elemento2["key"])
+                if conectados== True:
+                    contador+=1
+    return print(retorno2,contador)
+
 
 def conectados_total(grafo):
     retorno=scc.KosarajuSCC(grafo)
@@ -379,3 +386,37 @@ def compareroutes(route1, route2):
     else:
         return -1
 
+
+def totalStops(analyzer):
+    """
+    Retorna el total de estaciones (vertices) del grafo
+    """
+    return gr.numVertices(analyzer['connections'])
+
+
+def totalConnections(analyzer):
+    """
+    Retorna el total arcos del grafo
+    """
+    return gr.numEdges(analyzer['connections'])
+
+
+
+def estrictamente_conectados(graph,v1,v2):
+    retorno=scc.KosarajuSCC(graph)
+    retorno2=scc.stronglyConnected(retorno,v1,v1)
+    total=conectados_total
+    return print(retorno2,conectados_total)
+
+def conectados_total(grafo):
+    retorno=scc.KosarajuSCC(grafo)
+    recorrido=retorno["idscc"]["table"]["elements"]
+    contador=0
+    for elemento in recorrido:
+        for elemento2 in recorrido:
+            if elemento["key"]!=None and elemento2["key"]!=None:
+                conectados=scc.stronglyConnected(retorno,elemento["key"],elemento2["key"])
+                if conectados== True:
+                    contador+=1
+
+    return contador
