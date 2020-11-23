@@ -24,6 +24,7 @@
  *
  """
 
+import os
 import config as cf
 from App import model
 import csv
@@ -56,29 +57,22 @@ def init():
 # ___________________________________________________
 
 
-def loadServices(analyzer, servicesfile):
-    """
-    Carga los datos de los archivos CSV en el modelo.
-    Se crea un arco entre cada par de estaciones que
-    pertenecen al mismo servicio y van en el mismo sentido.
+def loadTrips(citibike):
 
-    addRouteConnection crea conexiones entre diferentes rutas
-    servidas en una misma estación.
-    """
-    servicesfile = input("Ingrese nombre archivo")
-    servicesfile = "201502-citibike-tripdata.csv"
-    input_file = csv.DictReader(open(servicesfile, encoding="utf-8"),
-                                delimiter=",")
-    lastservice = None
-    for service in input_file:
-        if lastservice is not None:
-            sameservice = lastservice['ServiceNo'] == service['ServiceNo']
-            samedirection = lastservice['Direction'] == service['Direction']
-            if sameservice and samedirection:
-                model.addStopConnection(analyzer, lastservice, service)
-        lastservice = service
-    model.addRouteConnections(analyzer)
-    return analyzer
+    for citibike_file in os.listdir(cf.data_dir):
+        if citibike_file.endswith('.csv'):
+            print('Cargando archivo: ' + citibike_file)
+            loadFile(citibike,citibike_file)
+    return citibike 
+
+
+def loadFile(citibike, tripfile):
+    
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding='utf-8'), delimiter=',')
+    for trip in input_file:
+        model.addTrip(citibike, trip)
+    return citibike
 
 # ___________________________________________________
 #  Funciones para consultas
@@ -138,3 +132,6 @@ def servedRoutes(analyzer):
 def conectados_estrictamente(graph,v1,v2):
     retorno=model.estrictamente_conectados(graph,v1,v2)
     return print(retorno)
+
+def findCircularRoutesList(grafo, vertice, tiempoInicial, tiempoFinal):
+    return model.createCicleUnderTime(grafo, vertice, tiempoInicial, tiempoFinal)

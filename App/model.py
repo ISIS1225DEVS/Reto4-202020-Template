@@ -31,6 +31,7 @@ from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
+from DISClib.DataStructures import edge as ed
 assert config
 
 """
@@ -45,11 +46,10 @@ de creacion y consulta sobre las estructuras de datos.
 
 
 def createDataStructures():
-     citibike[‘graph’] = gr.newGraph(datastructure='ADJ_LIST',
-                                  directed=True,
-                                  size=1000,
-                                  comparefunction=compareStations)
-
+    citibike['graph'] = gr.newGraph(datastructure='ADJ_LIST', 
+                                    directed=True, 
+                                    size=1000, 
+                                    comparefunction=compareStations)
     return citibike
 
 def newAnalyzer():
@@ -116,7 +116,7 @@ def addTrip(citibike, trip):
     addStation(citibike, origin)
     addStation(citibike, destination)
     addConnection(citibike, origin, destination, duration)
-    
+     
     return citibike
 
 
@@ -124,19 +124,22 @@ def addStation(citibike, stationid):
     """
     Adiciona una estación como un vertice del grafo
     """
-    if not gr.containsVertex(citibike [‘graph’], stationid):
-            gr.insertVertex(citibike [‘graph’], stationid)
+    if not gr.containsVertex(citibike ['connections'], stationid):
+            gr.insertVertex(citibike ['connections'], stationid)
 
     return citibike
 
 
 def addConnection(citibike, origin, destination, duration):
     """
-    Adiciona un arco entre dos estaciones
+    Adiciona un arco entre dos estaciones. Si el arci existe se actualiza su peso con el promedio
     """
-    edge = gr.getEdge(citibike [graph], origin, destination)
+    edge = gr.getEdge(citibike['connections'], origin, destination)
     if edge is None:
-        gr.addEdge(analyzer[graph], origin, destination, duration)
+        gr.addEdge(citibike['connections'], origin, destination, distance)
+    else:
+        ed.averageWeight(edge,duration)
+
     return citibike
 
 
@@ -293,6 +296,17 @@ def servedRoutes(analyzer):
     return maxvert, maxdeg
 
 
+def createCicleUnderTime(grafo, vertice, tiempo1, tiempo2=0):
+    lista = lt.newList()
+    tiempo = max(tiempo1, tiempo2)
+    ciclos = None
+    for ruta in ciclo:
+        costo = ciclo[ruta][weihgt] = (gr.numVertices(ciclo[ruta])-1) * 20
+        if costo <= tiempo
+            lt.addFirst(lista, ciclo[ruta])
+    return lista
+
+
 # ==============================
 # Funciones Helper
 # ==============================
@@ -320,7 +334,21 @@ def formatVertex(service):
 def estrictamente_conectados(graph,v1,v2):
     retorno=scc.KosarajuSCC(graph)
     retorno2=scc.stronglyConnected(retorno,v1,v1)
-    return retorno2
+    total=conectados_total
+    return print(retorno2,conectados_total)
+
+def conectados_total(grafo):
+    retorno=scc.KosarajuSCC(grafo)
+    recorrido=retorno["idscc"]["table"]["elements"]
+    contador=0
+    for elemento in recorrido:
+        for elemento2 in recorrido:
+            if elemento["key"]!=None and elemento2["key"]!=None:
+                conectados=scc.stronglyConnected(retorno,elemento["key"],elemento2["key"])
+                if conectados== True:
+                    contador+=1
+
+    return contador
 
 # ==============================
 # Funciones de Comparacion
