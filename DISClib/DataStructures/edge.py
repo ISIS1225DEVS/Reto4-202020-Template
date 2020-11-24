@@ -38,7 +38,9 @@ def newEdge(va, vb, weight=0):
     """
     edge = {'vertexA': va,
             'vertexB': vb,
-            'weight': weight
+            'weight': weight,
+            'pesos': 0,
+            'size': 0
             }
     return edge
 
