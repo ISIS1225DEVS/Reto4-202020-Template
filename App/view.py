@@ -113,7 +113,11 @@ def optionSeven():
 
 
 def optionEight():
-    mod.distancia(cont["connections"],43.2111,42.3333,56.5555,65.4444,cont)
+    lat1=float(input("ingrese latitud partida"))
+    lon1=float(input("ingrese longitud partida"))
+    lat2=float(input("ingrese latitud final"))
+    lon2=float(input("ingrese longitud final"))
+    controller.requerimiento6(cont["connections"],lat1,lon1,lat2,lon2,cont)
 
 
 def optionNine():
@@ -178,7 +182,7 @@ while True:
 
 
     elif int(inputs[0]) == 8:
-        None
+        optionEight()
 
 
     elif int(inputs[0]) == 9:
