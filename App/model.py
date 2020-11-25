@@ -275,56 +275,7 @@ def conectados_total(grafo):
 
     return contador
 
-def estructura2(grafo):
-    a=0
-    diccionario_llegan={}
-    diccionario_salen={}
-    diccionario_menos={}
-    verificar_llegan=[]
-    verificar_salen=[]
-    verificar_menos=[]
-    lista=gr.vertices(grafo)
-    primero=lista["first"]
-    primero_llegan=gr.indegree(grafo,primero["info"])
-    diccionario_llegan[primero["info"]]=primero_llegan
-    primero_salen=gr.outdegree(grafo,primero["info"])
-    diccionario_salen[primero["info"]]=primero_salen
-    suma_primero=primero_llegan+primero_salen
-    diccionario_menos[primero["info"]]=suma_primero
-    siguiente=primero["next"]
-    while siguiente != None:
-        actual=siguiente["info"]
-        actual_llegan=gr.indegree(grafo,siguiente["info"])
-        actual_salen=gr.outdegree(grafo,siguiente["info"])
-        suma_actual=actual_llegan+actual_salen
-        diccionario_llegan[actual]=diccionario_llegan.get(actual,0)+actual_llegan
-        diccionario_salen[actual]=diccionario_salen.get(actual,0)+actual_salen
-        diccionario_menos[actual]=diccionario_menos.get(actual,0)+suma_actual
-        siguiente=siguiente["next"]
-    while a<0:
-        for nodo in diccionario_llegan:
-            inicio_llegan=0
-            inicio_salen=0
-            menos=99999999
-            estacion_top_llega=""
-            estacion_top_sale=""
-            estacion_top_menos=""
-            if diccionario_llegan[nodo]>inicio_llegan and (nodo not in verificar_llegan):
-                inicio_llegan=diccionario_llegan[nodo]
-                estacion_top_llega=nodo
-            if diccionario_salen[nodo]>inicio_salen and (nodo not in verificar_salen):
-                inicio_salen=diccionario_salen[nodo]
-                estacion_top_sale=nodo
-            if diccionario_menos[nodo]>menos and (nodo not in verificar_menos):
-                menos=diccionario_menos[nodo]
-                estacion_top_menos=nodo
-        verificar_llegan.append(estacion_top_llega)
-        verificar_salen.append(estacion_top_sale)
-        verificar_menos.append(estacion_top_menos)
-        a=a+1
-    print(verificar_llegan)
-
-def estructura(grafo):
+def requerimiento3(grafo):
     lista=gr.vertices(grafo)
     print(lista)
     primero=lista["first"]
