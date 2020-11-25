@@ -102,8 +102,7 @@ def optionFourTwo(graph, vertex, initialTime, finalTime):
 
 
 def optionFive():
-    mod.estructura2(cont["connections"])
-    mod.estructura(cont["connections"])
+    mod.distancia(cont["connections"],45.6543,432.2233,42.5444,432.222,cont)
     
 
 
