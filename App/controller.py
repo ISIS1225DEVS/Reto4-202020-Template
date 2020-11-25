@@ -56,7 +56,7 @@ def init():
 # ___________________________________________________
 
 def requerimiento3(grafo):
-    model.estructura(grafo)
+    model.requerimiento3(grafo)
 
 def loadServices(analyzer, servicesfile):
     """

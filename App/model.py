@@ -277,7 +277,6 @@ def conectados_total(grafo):
 
 def requerimiento3(grafo):
     lista=gr.vertices(grafo)
-    print(lista)
     primero=lista["first"]
     primero_llegan=gr.indegree(grafo,primero["info"])
     primero_salen=gr.outdegree(grafo,primero["info"])
