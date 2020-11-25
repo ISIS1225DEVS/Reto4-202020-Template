@@ -546,8 +546,8 @@ def distancia(grafo,lat1,lon1,lat2,lon2,analyzer):
             destino_nombre=siguiente["info"]
         siguiente=siguiente["next"]
 
-    busqueda=dfs.DepthFirstSearch(grafo,cercana_nombre)
-    pila=dfs.pathTo(busqueda,destino_nombre)
-    retorno="Inicio: "+cercana_nombre+" "+"Destino: "+destino_nombre+" "
+    busqueda=djk.Dijkstra(grafo,cercana_nombre)
+    duracion=djk.distTo(busqueda,destino_nombre)
+    pila=djk.pathTo(busqueda,destino_nombre)
+    retorno="Inicio: "+cercana_nombre+" "+"Destino: "+destino_nombre+" "+"Duración: "+duracion
     return print(retorno, pila)
-
