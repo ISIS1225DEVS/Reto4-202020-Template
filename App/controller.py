@@ -56,6 +56,8 @@ def init():
 #  de datos en los modelos
 # ___________________________________________________
 
+def requerimiento3(grafo):
+    model.requerimiento3(grafo)
 
 
 def loadTrips(citibike):
