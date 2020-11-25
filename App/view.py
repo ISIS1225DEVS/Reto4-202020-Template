@@ -31,6 +31,7 @@ from App import controller
 from DISClib.ADT import stack
 import timeit
 assert config
+import model as mod
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -81,7 +82,6 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
-    print(cont['connections'])
 
     
 
@@ -102,7 +102,9 @@ def optionFourTwo(graph, vertex, initialTime, finalTime):
 
 
 def optionFive():
-    None
+    mod.estructura2(cont["connections"])
+    mod.estructura(cont["connections"])
+    
 
 
 def optionSix():
@@ -167,7 +169,7 @@ while True:
 
         
     elif int(inputs[0]) == 5:
-        None
+        optionFive()
 
 
     elif int(inputs[0]) == 6:

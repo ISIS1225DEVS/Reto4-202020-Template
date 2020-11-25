@@ -355,7 +355,6 @@ def conectados_total(grafo):
                     contador+=1
 
     return contador
-
 # ==============================
 # Funciones de Comparacion
 # ==============================
