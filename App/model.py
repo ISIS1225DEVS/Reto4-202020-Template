@@ -129,7 +129,7 @@ def addStation(citibike, stationid):
     return citibike
 
 
-def addConnection(citibike, origin, destination, duration):
+def addConnection(citibike, origin, destination, distance):
     """
     Adiciona un arco entre dos estaciones. Si el arci existe se actualiza su peso con el promedio
     """
@@ -137,7 +137,7 @@ def addConnection(citibike, origin, destination, duration):
     if edge is None:
         gr.addEdge(citibike['connections'], origin, destination, distance)
     else:
-        ed.averageWeight(edge,duration)
+        ed.updateAverageWeight(edge, distance)
 
     return citibike
 
@@ -295,15 +295,14 @@ def servedRoutes(analyzer):
     return maxvert, maxdeg
 
 
-def createCicleUnderTime(grafo, vertice, tiempo1, tiempo2=0):
-    lista = lt.newList()
-    tiempo = max(tiempo1, tiempo2)
-    ciclos = None
-    for ruta in ciclo:
-        costo = ciclo[ruta][weihgt] = (gr.numVertices(ciclo[ruta])-1) * 20
-        if costo <= tiempo
-            lt.addFirst(lista, ciclo[ruta])
-    return lista
+def createCicleUnderTime(grafo, vertice, tiempo1, tiempo2):
+    rutas_aprovadas = lt.newList(datastructure='ARRAY_LIST')
+    lista_ciclos = scc_vertice(grafo, vertice)
+    for ciclo in lista_ciclos:
+        lista = lt.getElement(lista_ciclos, vertice)
+        valido = scc_valido(lista, vertice, tiempo1, tiempo2)
+        lt.addFirst(rutas_aprovadas, valido)
+    return rutas_aprovadas
 
 
 # ==============================
