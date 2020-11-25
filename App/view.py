@@ -152,10 +152,11 @@ while True:
 
         
     elif int(inputs[0]) == 4:
-        print('Los tiempos presentados calculan un estimado de 20 minutos que podrá destinar para conocer cada parada')
-        vertex = input('Estación de partida: ')
-        initialTime = input('Tiempo mínimo disponible para el recorrido en minutos: ')
-        finalTime = input('Tiempo máximo disponible para el recorrido en minutos: ')
+        print("""Los tiempos presentados se calculan con un estimado de 20 
+                minutos que podrá destinar para conocer cada parada""")
+        vertex = input('Indique la estación de partida: ')
+        initialTime = input('Tiempo mínimo disponible para el recorrido, dado en minutos: ')
+        finalTime = input('Tiempo máximo disponible para el recorrido, dado en minutos: ')
         numeroRutas = optionFourOne(graph, vertex, initialTime, finalTime)
         listaRutas = optionFourTwo(graph, vertex, initialTime, finalTime)
         print('Se han encontrado ' + numeroRutas + ' rutas.')
@@ -164,35 +165,28 @@ while True:
 
         
     elif int(inputs[0]) == 5:
-        executiontime = timeit.timeit(optionFive, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        None
 
 
     elif int(inputs[0]) == 6:
-        executiontime = timeit.timeit(optionSix, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        None
 
 
     elif int(inputs[0]) == 7:
-        executiontime = timeit.timeit(optionSeven, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        None
 
 
     elif int(inputs[0]) == 8:
-        executiontime = timeit.timeit(optionEight, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        None
 
 
     elif int(inputs[0]) == 9:
-        executiontime = timeit.timeit(optionNine, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        None
 
     
     elif int(inputs[0]) == 10:
-        executiontime = timeit.timeit(optionTen, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        None
 
-        
     else:
         sys.exit(0)
 sys.exit(0)
