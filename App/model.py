@@ -503,7 +503,6 @@ def distancia(grafo,lat1,lon1,lat2,lon2,analyzer):
     primero=lista["first"]
     estacion1=primero["info"]
     R = 6373.0
-    print(analyzer["stops"])
     lat_primero=radians(analyzer["stops"][estacion1]["start station latitude"])
     lon_primero=radians(analyzer["stops"][estacion1]["start station longitude"])
 
