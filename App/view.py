@@ -31,6 +31,7 @@ from App import controller
 from DISClib.ADT import stack
 import timeit
 assert config
+import model as mod
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -61,7 +62,7 @@ def printMenu():
     print("2- Cargar informacion")
     print("3- Buscar cantidad de cluster de Viajes")
     print("4- Buscar ruta turistica Circular")
-    print("5- Buscar ruta turistica de menor tiempo")
+    print("5- Buscar estaciones críticas")
     print("6- Buscar ruta turistica por resistencia")
     print("7- Buscar ruta mas corta entre estaciones")
     print("8- Buscar ruta de interes turístico")
@@ -95,7 +96,7 @@ def optionFour():
     None
 
 def optionFive():
-    None
+    controller.requerimiento3(cont["connections"])
 
 def optionSix():
     None
@@ -104,7 +105,7 @@ def optionSeven():
     None
 
 def optionEight():
-    None
+    mod.distancia(cont["connections"],43.2111,42.3333,56.5555,65.4444,cont)
 
 def optionNine():
     None

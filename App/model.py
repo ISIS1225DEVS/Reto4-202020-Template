@@ -30,6 +30,7 @@ from DISClib.ADT import map as m
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dfs
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
 assert config
@@ -273,3 +274,185 @@ def conectados_total(grafo):
                     contador+=1
 
     return contador
+
+def estructura2(grafo):
+    a=0
+    diccionario_llegan={}
+    diccionario_salen={}
+    diccionario_menos={}
+    verificar_llegan=[]
+    verificar_salen=[]
+    verificar_menos=[]
+    lista=gr.vertices(grafo)
+    primero=lista["first"]
+    primero_llegan=gr.indegree(grafo,primero["info"])
+    diccionario_llegan[primero["info"]]=primero_llegan
+    primero_salen=gr.outdegree(grafo,primero["info"])
+    diccionario_salen[primero["info"]]=primero_salen
+    suma_primero=primero_llegan+primero_salen
+    diccionario_menos[primero["info"]]=suma_primero
+    siguiente=primero["next"]
+    while siguiente != None:
+        actual=siguiente["info"]
+        actual_llegan=gr.indegree(grafo,siguiente["info"])
+        actual_salen=gr.outdegree(grafo,siguiente["info"])
+        suma_actual=actual_llegan+actual_salen
+        diccionario_llegan[actual]=diccionario_llegan.get(actual,0)+actual_llegan
+        diccionario_salen[actual]=diccionario_salen.get(actual,0)+actual_salen
+        diccionario_menos[actual]=diccionario_menos.get(actual,0)+suma_actual
+        siguiente=siguiente["next"]
+    while a<0:
+        for nodo in diccionario_llegan:
+            inicio_llegan=0
+            inicio_salen=0
+            menos=99999999
+            estacion_top_llega=""
+            estacion_top_sale=""
+            estacion_top_menos=""
+            if diccionario_llegan[nodo]>inicio_llegan and (nodo not in verificar_llegan):
+                inicio_llegan=diccionario_llegan[nodo]
+                estacion_top_llega=nodo
+            if diccionario_salen[nodo]>inicio_salen and (nodo not in verificar_salen):
+                inicio_salen=diccionario_salen[nodo]
+                estacion_top_sale=nodo
+            if diccionario_menos[nodo]>menos and (nodo not in verificar_menos):
+                menos=diccionario_menos[nodo]
+                estacion_top_menos=nodo
+        verificar_llegan.append(estacion_top_llega)
+        verificar_salen.append(estacion_top_sale)
+        verificar_menos.append(estacion_top_menos)
+        a=a+1
+    print(verificar_llegan)
+
+def estructura(grafo):
+    lista=gr.vertices(grafo)
+    print(lista)
+    primero=lista["first"]
+    primero_llegan=gr.indegree(grafo,primero["info"])
+    primero_salen=gr.outdegree(grafo,primero["info"])
+    estacion_llegan=primero["info"]
+    estacion_salen=primero["info"]
+    suma_primero=primero_llegan+primero_salen
+    estacion_menos=primero["info"]
+    llegan=primero_llegan
+    salen=primero_salen
+    siguiente=primero["next"]
+    while siguiente != None:
+        actual_llegan=gr.indegree(grafo,siguiente["info"])
+        actual_salen=gr.outdegree(grafo,siguiente["info"])
+        suma_actual=actual_llegan+actual_salen
+        if actual_llegan>llegan:
+            llegan=actual_llegan
+            estacion_llegan=siguiente["info"]
+        if actual_salen>salen:
+            salen=actual_salen
+            estacion_salen=siguiente["info"]
+        if suma_actual<suma_primero:
+            suma_primero=suma_actual
+            estacion_menos=siguiente["info"]
+        siguiente=siguiente["next"]
+    top_1_llegan=estacion_llegan
+    top_1_salen=estacion_salen
+    top_1_menos=estacion_menos
+    llegan=primero_llegan
+    salen=primero_salen
+    suma_primero=primero_llegan+primero_salen
+    siguiente=primero["next"]
+    while siguiente != None:
+        actual_llegan=gr.indegree(grafo,siguiente["info"])
+        actual_salen=gr.outdegree(grafo,siguiente["info"])
+        suma_actual=actual_llegan+actual_salen
+        if actual_llegan>llegan and siguiente["info"]!=top_1_llegan:
+            llegan=actual_llegan
+            estacion_llegan=siguiente["info"]
+        if actual_salen>salen and siguiente["info"]!=top_1_salen:
+            salen=actual_salen
+            estacion_salen=siguiente["info"]
+        if suma_actual<suma_primero and siguiente["info"]!=top_1_menos:
+            suma_primero=suma_actual
+            estacion_menos=siguiente["info"]
+        siguiente=siguiente["next"]
+    top_2_llegan=estacion_llegan
+    top_2_salen=estacion_salen
+    top_2_menos=estacion_menos
+    llegan=primero_llegan
+    salen=primero_salen
+    suma_primero=primero_llegan+primero_salen
+    siguiente=primero["next"]
+    while siguiente != None:
+        actual_llegan=gr.indegree(grafo,siguiente["info"])
+        actual_salen=gr.outdegree(grafo,siguiente["info"])
+        suma_actual=actual_llegan+actual_salen
+        if actual_llegan>llegan and siguiente["info"]!=top_1_llegan and siguiente["info"]!=top_2_llegan:
+            llegan=actual_llegan
+            estacion_llegan=siguiente["info"]
+        if actual_salen>salen and siguiente["info"]!=top_1_salen and siguiente["info"]!=top_2_salen:
+            salen=actual_salen
+            estacion_salen=siguiente["info"]
+        if suma_actual<suma_primero and siguiente["info"]!=top_1_menos and siguiente["info"]!=top_2_menos:
+            suma_primero=suma_actual
+            estacion_menos=siguiente["info"]
+        siguiente=siguiente["next"]
+    top_3_llegan=estacion_llegan
+    top_3_salen=estacion_salen
+    top_3_menos=estacion_menos 
+    retorno_1="[Las estaciones top de llegada son "+top_1_llegan+", "+top_2_llegan+", "+top_3_llegan+" ]"
+    retorno_2="[Las estaciones top de salida son "+top_1_salen+", "+top_2_salen+", "+top_3_salen+" ]"
+    retorno_3="[Las estaciones menos utilizadas son "+top_1_menos+", "+top_2_menos+", "+top_3_menos+" ]"
+    return print(retorno_1,retorno_2,retorno_3)
+
+from math import sin, cos, sqrt, atan2, radians
+
+def distancia(grafo,lat1,lon1,lat2,lon2,analyzer):
+    lista=gr.vertices(grafo)
+    primero=lista["first"]
+    estacion1=primero["info"]
+    R = 6373.0
+    print(analyzer["stops"])
+    lat_primero=radians(analyzer["stops"][estacion1]["start station latitude"])
+    lon_primero=radians(analyzer["stops"][estacion1]["start station longitude"])
+
+    dlon_primero = lon_primero - lon1
+    dlat_primero = lat_primero - lat1
+    a_primero = sin(dlat_primero / 2)**2 + cos(lat1) * cos(lat_primero) * sin(dlon_primero / 2)**2
+    c_primero = 2 * atan2(sqrt(a_primero), sqrt(1 - a_primero))
+    distancia_1 = R * c_primero
+
+    dlon_primero2 = lon_primero - lon2
+    dlat_primero2 = lat_primero - lat2
+    a_primero2 = sin(dlat_primero2 / 2)**2 + cos(lat2) * cos(lat_primero) * sin(dlon_primero2 / 2)**2
+    c_primero2 = 2 * atan2(sqrt(a_primero2), sqrt(1 - a_primero2))
+    distancia_2 = R * c_primero2
+
+    cercana=distancia_1
+    cercana_nombre=estacion1
+    destino=distancia_2
+    destino_nombre=estacion1
+    siguiente=primero["next"]
+
+    while next!=None:
+        lat_actual=radians(analyzer["stops"][siguiente["info"]]["start station latitude"])
+        lon_actual=radians(analyzer["stops"][siguiente["info"]]["start station longitude"])
+        dlon1 = lon_actual - lon1
+        dlat1 = lat_actual - lat1
+        a1 = sin(dlat1 / 2)**2 + cos(lat1) * cos(lat_actual) * sin(dlon1 / 2)**2
+        c1 = 2 * atan2(sqrt(a1), sqrt(1 - a1))
+        distance_actual1 = R * c1
+        if distance_actual1<cercana:
+            cercana=distance_actual1
+            cercana_nombre=siguiente["info"]
+        dlon2 = lon_actual - lon2
+        dlat2 = lat_actual - lat2
+        a2 = sin(dlat2 / 2)**2 + cos(lat2) * cos(lat_actual) * sin(dlon2 / 2)**2
+        c2 = 2 * atan2(sqrt(a2), sqrt(1 - a2))
+        distance_actual2 = R * c2
+        if distance_actual2<destino:
+            destino=distance_actual2
+            destino_nombre=siguiente["info"]
+        siguiente=siguiente["next"]
+
+    busqueda=dfs.DepthFirstSearch(grafo,cercana_nombre)
+    pila=dfs.pathTo(busqueda,destino_nombre)
+    retorno="Inicio: "+cercana_nombre+" "+"Destino: "+destino_nombre+" "
+    return print(retorno, pila)
+
