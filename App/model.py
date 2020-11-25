@@ -111,13 +111,15 @@ def addStop(citibike, stationid, latitude, longitude, edad, s_ll):
                                 '31-40':0,
                                 '41-50':0,
                                 '51-60':0,
-                                '60+':0}, {'0-10':0,
+                                '60+':0,
+                                'total':0}, {'0-10':0,
                                         '11-20':0,
                                         '21-30':0,
                                         '31-40':0,
                                         '41-50':0,
                                         '51-60':0,
-                                        '60+':0}]
+                                        '60+':0,
+                                        'total':0}]
     if s_ll == 's':
         a = 2
     else:
@@ -145,6 +147,9 @@ def addStop(citibike, stationid, latitude, longitude, edad, s_ll):
         nuevo = retorno[a].get('60+') + 1
         retorno[a]['60+'] = nuevo
 
+    nuevo = retorno[a].get('total') + 1
+    retorno[a]['total'] = nuevo
+
     m.put(citibike['stops'], stationid, retorno)
 
     return citibike
@@ -162,9 +167,38 @@ def req1 (citibike, station1, station2):
 def req3 (citibike):
     lstArrival = []
     lstDeparture = []
-    diccLeast = {}
     lstLeast = []
 
+    iterador = it.newIterator(m.keySet(citibike['stops']))
+    while it.hasNext(iterador):
+        element = it.next(iterador)
+        dicc = m.get(citibike['stops'],element)
+        salida = dicc['value'][2]['total']
+        llegada = dicc['value'][3]['total']
+        ambas = salida + llegada
+
+        if len(lstArrival) < 3:
+                lstArrival.append({'key':dicc['key'], 'value':salida})
+                lstDeparture.append({'key':dicc['key'], 'value':llegada})
+                lstLeast.append({'key':dicc['key'], 'value':ambas})
+        else:
+            for j in lstArrival:
+                if salida > j['value']:
+                    lstArrival.append({'key':dicc['key'], 'value':salida})
+                    lstArrival.remove(j)
+                    break
+            for j in lstDeparture:
+                if llegada > j['value']:
+                    lstDeparture.append({'key':dicc['key'], 'value':llegada})
+                    lstDeparture.remove(j)
+                    break
+            for j in lstLeast:
+                if ambas < j['value']:
+                    lstLeast.append({'key':dicc['key'], 'value':ambas})
+                    lstLeast.remove(j)
+  
+    return (lstArrival,lstDeparture,lstLeast)
+'''
     for i in citibike['graph']['indegree']['table']['elements']:
         if i['key'] != None:
             diccLeast[i['key']] = i['value']
@@ -178,7 +212,6 @@ def req3 (citibike):
                         lstArrival.append(i)
                         lstArrival.remove(j)
                         break
-
 
     for i in citibike['graph']['vertices']['table']['elements']:
         if i['key'] != None:
@@ -205,8 +238,8 @@ def req3 (citibike):
                     lstLeast.append((i,diccLeast[i]))
                     lstLeast.remove(j)
                     break
+'''
 
-    return (lstArrival,lstDeparture,lstLeast)
 
 def req5 (citibike, edad):
 
@@ -229,6 +262,7 @@ def req5 (citibike, edad):
     estacion_salida = 'Ninguna'
     max_salida = 0
     estacion_llegada = 'Ninguna'
+    llegada_2 = 'Ninguna'
     max_llegada = 0
     while it.hasNext(iterador):
         element = it.next(iterador)
@@ -239,11 +273,26 @@ def req5 (citibike, edad):
             max_salida = salida[key]
             estacion_salida = dicc['key']
         if llegada[key] > max_llegada:
+            llegada_2 = estacion_llegada
             max_llegada = llegada[key]
             estacion_llegada = dicc['key']
 
-    print (estacion_salida,estacion_llegada)
+    if estacion_llegada == estacion_salida:
+        estacion_llegada = llegada_2
 
+    ruta = []
+    dijsktra = djk.Dijkstra(citibike['graph'],str(estacion_salida))
+    if djk.hasPathTo(dijsktra, estacion_llegada):
+        if djk.hasPathTo(dijsktra, estacion_llegada):
+            ruta_lt = djk.pathTo(dijsktra, estacion_llegada)
+            iterador = it.newIterator(ruta_lt)
+            ruta.append(estacion_salida)
+            while it.hasNext(iterador):
+                element = it.next(iterador)
+                ruta.append(element['vertexB'])
+    else:
+        ruta = 'No hay ruta'
+    return (estacion_salida, estacion_llegada, ruta)
 
 def req6(citibike, lat1, lon1, lat2, lon2):
     iterador = it.newIterator(m.keySet(citibike['stops']))
@@ -274,11 +323,23 @@ def req6(citibike, lat1, lon1, lat2, lon2):
             radio_llegada = d_ll
             estacion_llegada = diccCoord['key']
 
-    print (estacion_salida, estacion_llegada)
+
+    if estacion_llegada != '' and estacion_salida != '':
+        ruta = []
+        dijsktra = djk.Dijkstra(citibike['graph'],str(estacion_salida))
+        if djk.hasPathTo(dijsktra, estacion_llegada):
+            ruta_lt = djk.pathTo(dijsktra, estacion_llegada)
+            iterador = it.newIterator(ruta_lt)
+            ruta.append(estacion_salida)
+            while it.hasNext(iterador):
+                element = it.next(iterador)
+                ruta.append(element['vertexB'])
+    else: 
+        ruta = 'No hay ruta'
+        
+    return (estacion_salida, estacion_llegada, ruta)
 
     
-    
-
 def numSCC(graph):
     sc = scc.KosarajuSCC(graph['graph'])
     return scc.connectedComponents(sc)

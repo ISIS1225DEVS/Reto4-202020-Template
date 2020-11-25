@@ -82,29 +82,23 @@ def optionFour():
     pass
 
 def optionFive():
-    retorno = controller.ejecutarreq3(cont)
-    print ('Las Estaciones con más llegadas son: ', retorno[0])
-    print ('Las Estaciones con más salidas son: ', retorno[1])
-    print ('Las Estaciones con menos llegadas y salidas son: ', retorno[2])
+    controller.ejecutarreq3(cont)
+
 
 def optionSix():
     pass
 
 def optionSeven():
-    model.req5(cont, 1)
-    model.req5(cont, 11)
-    model.req5(cont, 21)
-    model.req5(cont, 31)
-    model.req5(cont, 41)
-    model.req5(cont, 51)
-    model.req5(cont, 61)
-    model.req5(cont, 17)
-    model.req5(cont, 71)
-    model.req5(cont, 37)
+    edad = int(input('Edad del usuario: '))
+    controller.ejecutarreq5(cont, edad)
 
 
 def optionEight():
-    model.req6(cont, 41,-75,40,-74)
+    lat1 = float(input('Ingrese la latitud del punto de salida: '))
+    lon1 = float(input('Ingrese la longitud del punto de salida: '))
+    lat2 = float(input('Ingrese la latitud del punto de llegada: '))
+    lon2 = float(input('Ingrese la longitud del punto de llegada: '))
+    controller.ejecutarreq6(cont, lat1, lon1, lat2, lon2)
 
 def optionNine():
     pass
@@ -128,17 +122,17 @@ while True:
     elif int(inputs[0]) == 2:
 
         controller.loadTrips(cont)
+
+        executiontime = timeit.timeit(optionTwo, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+
+    elif int(inputs[0]) == 3:
         numedges = controller.totalConnections(cont)
         numvertex = controller.totalStops(cont)
         scc = controller.numSCC(cont)
         print('Numero de vertices: ' + str(numvertex))
         print('Numero de arcos: ' + str(numedges))
         print('Numero de elementos fuertemente conectados: ' + str(scc))
-
-        executiontime = timeit.timeit(optionTwo, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
-
-    elif int(inputs[0]) == 3:
         executiontime = timeit.timeit(optionThree, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
