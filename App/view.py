@@ -81,8 +81,10 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+    print(cont['connections'])
+
     
-    
+
 def optionThree():
         v1=input("Ingrese estación 1(id-name)\n")
         v2=input("Ingrese estación 2(id-name)\n")
