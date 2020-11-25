@@ -33,6 +33,7 @@ from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dfs
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
+from DISClib.DataStructures import edge as ed
 assert config
 
 """
@@ -44,6 +45,14 @@ de creacion y consulta sobre las estructuras de datos.
 #                       API
 # -----------------------------------------------------
 
+
+
+def createDataStructures():
+    citibike['graph'] = gr.newGraph(datastructure='ADJ_LIST', 
+                                    directed=True, 
+                                    size=1000, 
+                                    comparefunction=compareStations)
+    return citibike
 
 def newAnalyzer():
     """ Inicializa el analizador
@@ -77,6 +86,63 @@ def newAnalyzer():
 
 # Funciones para agregar informacion al grafo
 
+
+def loadTrips(citibike):
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            loadFile(analyzer, filename)
+    return analyzer
+
+
+def loadFile(citibike, tripfile):
+    """
+    """
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+    for trip in input_file:
+        model.addTrip(citibike, trip)
+    return citibike
+
+
+def addTrip(citibike, trip):
+    """
+    Añade un viaje
+    """
+    origin = trip['start station id']
+    destination = trip['end station id']
+    duration = int(trip['tripduration'])
+    addStation(citibike, origin)
+    addStation(citibike, destination)
+    addConnection(citibike, origin, destination, duration)
+     
+    return citibike
+
+
+def addStation(citibike, stationid):
+    """
+    Adiciona una estación como un vertice del grafo
+    """
+    if not gr.containsVertex(citibike ['connections'], stationid):
+            gr.insertVertex(citibike ['connections'], stationid)
+
+    return citibike
+
+
+def addConnection(citibike, origin, destination, distance):
+    """
+    Adiciona un arco entre dos estaciones. Si el arci existe se actualiza su peso con el promedio
+    """
+    edge = gr.getEdge(citibike['connections'], origin, destination)
+    if edge is None:
+        gr.addEdge(citibike['connections'], origin, destination, distance)
+    else:
+        ed.updateAverageWeight(edge, distance)
+
+    return citibike
+
+  
 def addStopConnection(analyzer, lastservice, service):
     """
     Adiciona las estaciones al grafo como vertices y arcos entre las
@@ -153,17 +219,96 @@ def addRouteConnections(analyzer):
                 addConnection(analyzer, prevrout, route, 0)
                 addConnection(analyzer, route, prevrout, 0)
             prevrout = route
+            
+
+# ==============================
+# Funciones de consulta
+# ==============================
 
 
-def addConnection(analyzer, origin, destination, distance):
+def connectedComponents(analyzer):
     """
-    Adiciona un arco entre dos estaciones
+    Calcula los componentes conectados del grafo
+    Se utiliza el algoritmo de Kosaraju
     """
+    analyzer['components'] = scc.KosarajuSCC(analyzer['connections'])
+    return scc.connectedComponents(analyzer['components'])
 
-    edge = gr.getEdge(analyzer['connections'], origin, destination)
-    if edge is None:
-        gr.addEdge(analyzer['connections'], origin, destination, distance)
+
+def minimumCostPaths(analyzer, initialStation):
+    """
+    Calcula los caminos de costo mínimo desde la estacion initialStation
+    a todos los demas vertices del grafo
+    """
+    analyzer['paths'] = djk.Dijkstra(analyzer['connections'], initialStation)
     return analyzer
+  
+  
+def hasPath(analyzer, destStation):
+    """
+    Indica si existe un camino desde la estacion inicial a la estación destino
+    Se debe ejecutar primero la funcion minimumCostPaths
+    """
+    return djk.hasPathTo(analyzer['paths'], destStation)
+
+
+def minimumCostPath(analyzer, destStation):
+    """
+    Retorna el camino de costo minimo entre la estacion de inicio
+    y la estacion destino
+    Se debe ejecutar primero la funcion minimumCostPaths
+    """
+    path = djk.pathTo(analyzer['paths'], destStation)
+    return path
+
+
+def totalStops(analyzer):
+    """
+    Retorna el total de estaciones (vertices) del grafo
+    """
+    return gr.numVertices(analyzer['connections'])
+
+
+def totalConnections(analyzer):
+    """
+    Retorna el total arcos del grafo
+    """
+    return gr.numEdges(analyzer['connections'])
+
+
+def servedRoutes(analyzer):
+    """
+    Retorna la estación que sirve a mas rutas.
+    Si existen varias rutas con el mismo numero se
+    retorna una de ellas
+    """
+    lstvert = m.keySet(analyzer['stops'])
+    itlstvert = it.newIterator(lstvert)
+    maxvert = None
+    maxdeg = 0
+    while(it.hasNext(itlstvert)):
+        vert = it.next(itlstvert)
+        lstroutes = m.get(analyzer['stops'], vert)['value']
+        degree = lt.size(lstroutes)
+        if(degree > maxdeg):
+            maxvert = vert
+            maxdeg = degree
+    return maxvert, maxdeg
+
+
+def createCicleUnderTime(grafo, vertice, tiempo1, tiempo2):
+    rutas_aprovadas = lt.newList(datastructure='ARRAY_LIST')
+    lista_ciclos = scc_vertice(grafo, vertice)
+    for ciclo in lista_ciclos:
+        lista = lt.getElement(lista_ciclos, vertice)
+        valido = scc_valido(lista, vertice, tiempo1, tiempo2)
+        lt.addFirst(rutas_aprovadas, valido)
+    return rutas_aprovadas
+
+
+# ==============================
+# Funciones Helper
+# ==============================
 
 def cleanServiceDistance(lastservice, service):
     """
@@ -198,6 +343,7 @@ def estrictamente_conectados(graph,v1,v2):
                     contador+=1
     return print(retorno2,contador)
 
+
 def conectados_total(grafo):
     retorno=scc.KosarajuSCC(grafo)
     recorrido=retorno["idscc"]["table"]["elements"]
@@ -210,7 +356,6 @@ def conectados_total(grafo):
                     contador+=1
 
     return contador
-
 # ==============================
 # Funciones de Comparacion
 # ==============================

@@ -188,7 +188,7 @@ def edges(graph):
                 edge = it.next(iteredge)
                 if (graph['directed']):
                     lt.addLast(lstresp, edge)
-                elif (not lt.isPresent(lstresp, edge, )):
+                elif (not lt.isPresent(lstresp, edge)):
                     lt.addLast(lstresp, edge)
         return lstresp
     except Exception as exp:
@@ -277,13 +277,16 @@ def getEdge(graph, vertexa, vertexb):
     """
     try:
         element = map.get(graph['vertices'], vertexa)
-        
         lst = element['value']
         itvertex = it.newIterator(lst)
         while (it.hasNext(itvertex)):
             edge = it.next(itvertex)
-            if (e.either(edge) == vertexa or
-               (e.other(edge, e.either(edge)) == vertexa)):
+            if (graph['directed']):
+                if (e.either(edge) == vertexa and
+                   (e.other(edge, e.either(edge)) == vertexb)):
+                    return edge
+            elif(e.either(edge) == vertexa or
+                 (e.other(edge, e.either(edge)) == vertexa)):
                 if (e.either(edge) == vertexb or
                    (e.other(edge, e.either(edge)) == vertexb)):
                     return edge
