@@ -102,7 +102,7 @@ def optionFourTwo(graph, vertex, initialTime, finalTime):
 
 
 def optionFive():
-    controller.requerimiento3(cont["connections"])
+    controller.requerimiento3(cont["connections"],cont)
 
 def optionSix():
     None
