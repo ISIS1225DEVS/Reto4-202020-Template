@@ -76,12 +76,22 @@ def addConnection(citibike, origin, destination, duration):
     """
     edge = gr.getEdge(citibike ['graph'], origin, destination)
     if edge is None:
-        gr.addEdge(analyzer['graph'], origin, destination, duration)
+        gr.addEdge(citibike['graph'], origin, destination, duration)
     return citibike
 
 # ==============================
 # Funciones de consulta
 # ==============================
+def minimum_path(analyzer, initialStation,value):
+    analyzer['paths'] = djk.Dijkstra(analyzer['trip'],initialStation)
+    valor_recorridos = gr.numVertices(analyzer['paths'])['duration']
+    if valor_recorridos < value:
+        return analyzer
+    else:
+        return 0
+
+
+    
 
 def numSCC(graph,sc):
     sc = scc.KosarajuSCC(graph)
