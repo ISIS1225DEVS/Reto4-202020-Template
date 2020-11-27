@@ -101,17 +101,6 @@ def addConnection(analyzer, origin, destination, duration):
 # ==============================
 # Funciones de consulta
 # ==============================
-def minimum_path(analyzer, initialStation,value):
-    analyzer['paths'] = djk.Dijkstra(analyzer['trip'],initialStation)
-    valor_recorridos = gr.numVertices(analyzer['paths'])['duration']
-    if valor_recorridos < value:
-        return analyzer
-    else:
-        return 0
-
-
-    
-
 def numSCC(analyzer):
     sc = scc.KosarajuSCC(analyzer["connections"])
     return scc.connectedComponents(sc)
@@ -194,8 +183,18 @@ def RutaCircular(analyzer, vertice): #REQUERIMIENTO 2
             
     return (peso, lista_estaciones)
 
+    def minimum_path(analyzer, initialStation,value):
+    analyzer['paths'] = djk.Dijkstra(analyzer['trip'],initialStation)
+    valor_recorridos = gr.numVertices(analyzer['paths'])['duration']
+    if valor_recorridos < value:
+        return analyzer
+    else:
+        return 0
 
-
+    def viaje_por_coordenadas(analyzer,latitud_origen,longitud_origen,latitud_destino,longitud_destino):
+        estacion_llegada = analyzer['connections'][latitud_destino][longitud_destino]
+        respuesta = djk.pathTo(analyzer['connections'][latitud_origen][longitud_origen],estacion_llegada)
+        return respuesta 
 
 
 # ==============================
