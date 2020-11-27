@@ -68,10 +68,11 @@ def newAnalyzer():
                     'stops': None,
                     'connections': None,
                     'components': None,
-                    'paths': None
+                    'paths': None,
+                    "diccionario": None
                     }
 
-        analyzer['stops'] = m.newMap(numelements=1001,
+        analyzer['stops'] = m.newMap(numelements=1,
                                      maptype='PROBING',
                                      comparefunction=compareStopIds)
 
@@ -79,6 +80,8 @@ def newAnalyzer():
                                               directed=True,
                                               size=14000,
                                               comparefunction=compareStopIds)
+
+        analyzer["diccionario"]={}
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
@@ -110,13 +113,40 @@ def addTrip(citibike, trip):
     """
     Añade un viaje
     """
+    latitud_inicio=trip["start station latitude"]
+    longitud_inicio=trip["start station longitude"]
+    latitud_final=trip["end station latitude"]
+    longitud_final=trip["end station longitude"]
+    nombre_inicio=trip["start station name"]
+    nombre_final=trip["end station name"]
     origin = trip['start station id']
     destination = trip['end station id']
     duration = int(trip['tripduration'])
     addStation(citibike, origin)
     addStation(citibike, destination)
     addConnection(citibike, origin, destination, duration)
-     
+
+    if origin not in citibike["diccionario"]:
+        citibike["diccionario"][origin]={"latitud":latitud_inicio,"longitud":longitud_inicio,"nombre":nombre_inicio}
+    if destination not in citibike["diccionario"]:
+        citibike["diccionario"][destination]={"latitud":latitud_final,"longitud":longitud_final,"nombre":nombre_final}
+    if m.contains(citibike["stops"],origin)==False:
+        mapa=m.newMap(numelements=1,
+                                     maptype='PROBING',
+                                     comparefunction=compareStopIds)
+        m.put(mapa,"latitud",latitud_inicio)
+        m.put(mapa,"longitud",longitud_inicio)
+        m.put(mapa,"nombre",nombre_inicio)
+        m.put(citibike["stops"],origin,mapa)
+
+    if m.contains(citibike["stops"],destination)==False:
+        mapa=m.newMap(numelements=1,
+                                     maptype='PROBING',
+                                     comparefunction=compareStopIds)
+        m.put(mapa,"latitud",latitud_final)
+        m.put(mapa,"longitud",longitud_final)
+        m.put(mapa,"nombre",nombre_final)
+        m.put(citibike["stops"],destination,mapa)   
     return citibike
 
 
@@ -420,91 +450,82 @@ def conectados_total(grafo):
 
     return contador
 
-def requerimiento3(grafo):
+def requerimiento3(grafo,analyzer):
+    diccionario=analyzer["diccionario"]
+    a=0
+    lista1=[]
+    lista2=[]
+    lista3=[]
+    lista_final_llegadas=[]
+    lista_final_salidas=[]
+    lista_final_menos=[]
+    dict_entradas={}
+    dict_salidas={}
+    dict_menos={}
     lista=gr.vertices(grafo)
     primero=lista["first"]
     primero_llegan=gr.indegree(grafo,primero["info"])
     primero_salen=gr.outdegree(grafo,primero["info"])
     estacion_llegan=primero["info"]
     estacion_salen=primero["info"]
-    suma_primero=primero_llegan+primero_salen
     estacion_menos=primero["info"]
-    llegan=primero_llegan
-    salen=primero_salen
     siguiente=primero["next"]
-    while siguiente != None:
-        actual_llegan=gr.indegree(grafo,siguiente["info"])
-        actual_salen=gr.outdegree(grafo,siguiente["info"])
-        suma_actual=actual_llegan+actual_salen
-        if actual_llegan>llegan:
-            llegan=actual_llegan
-            estacion_llegan=siguiente["info"]
-        if actual_salen>salen:
-            salen=actual_salen
-            estacion_salen=siguiente["info"]
-        if suma_actual<suma_primero:
-            suma_primero=suma_actual
-            estacion_menos=siguiente["info"]
-        siguiente=siguiente["next"]
-    top_1_llegan=estacion_llegan
-    top_1_salen=estacion_salen
-    top_1_menos=estacion_menos
-    llegan=primero_llegan
-    salen=primero_salen
-    suma_primero=primero_llegan+primero_salen
-    siguiente=primero["next"]
-    while siguiente != None:
-        actual_llegan=gr.indegree(grafo,siguiente["info"])
-        actual_salen=gr.outdegree(grafo,siguiente["info"])
-        suma_actual=actual_llegan+actual_salen
-        if actual_llegan>llegan and siguiente["info"]!=top_1_llegan:
-            llegan=actual_llegan
-            estacion_llegan=siguiente["info"]
-        if actual_salen>salen and siguiente["info"]!=top_1_salen:
-            salen=actual_salen
-            estacion_salen=siguiente["info"]
-        if suma_actual<suma_primero and siguiente["info"]!=top_1_menos:
-            suma_primero=suma_actual
-            estacion_menos=siguiente["info"]
-        siguiente=siguiente["next"]
-    top_2_llegan=estacion_llegan
-    top_2_salen=estacion_salen
-    top_2_menos=estacion_menos
-    llegan=primero_llegan
-    salen=primero_salen
-    suma_primero=primero_llegan+primero_salen
-    siguiente=primero["next"]
-    while siguiente != None:
-        actual_llegan=gr.indegree(grafo,siguiente["info"])
-        actual_salen=gr.outdegree(grafo,siguiente["info"])
-        suma_actual=actual_llegan+actual_salen
-        if actual_llegan>llegan and siguiente["info"]!=top_1_llegan and siguiente["info"]!=top_2_llegan:
-            llegan=actual_llegan
-            estacion_llegan=siguiente["info"]
-        if actual_salen>salen and siguiente["info"]!=top_1_salen and siguiente["info"]!=top_2_salen:
-            salen=actual_salen
-            estacion_salen=siguiente["info"]
-        if suma_actual<suma_primero and siguiente["info"]!=top_1_menos and siguiente["info"]!=top_2_menos:
-            suma_primero=suma_actual
-            estacion_menos=siguiente["info"]
-        siguiente=siguiente["next"]
-    top_3_llegan=estacion_llegan
-    top_3_salen=estacion_salen
-    top_3_menos=estacion_menos 
-    retorno_1="[Las estaciones top de llegada son "+top_1_llegan+", "+top_2_llegan+", "+top_3_llegan+" ]"
-    retorno_2="[Las estaciones top de salida son "+top_1_salen+", "+top_2_salen+", "+top_3_salen+" ]"
-    retorno_3="[Las estaciones menos utilizadas son "+top_1_menos+", "+top_2_menos+", "+top_3_menos+" ]"
-    return print(retorno_1,retorno_2,retorno_3)
 
-from math import sin, cos, sqrt, atan2, radians
+    while siguiente != None:
+        actual_llegan=gr.indegree(grafo,siguiente["info"])
+        actual_salen=gr.outdegree(grafo,siguiente["info"])
+        suma_actual=actual_llegan+actual_salen
+        dict_entradas[siguiente["info"]]=dict_entradas.get(siguiente["info"],0)+actual_llegan
+        dict_salidas[siguiente["info"]]=dict_salidas.get(siguiente["info"],0)+actual_salen
+        dict_menos[siguiente["info"]]=dict_menos.get(siguiente["info"],0)+suma_actual
+        siguiente=siguiente["next"]
+
+
+    while a<3:
+        top1=""
+        top2=""
+        top3=""
+        mayor_entrada=0
+        mayor_salida=0
+        menor_uso=99999
+        for nodo in dict_entradas:
+            if dict_entradas[nodo]>mayor_entrada and nodo not in lista1:
+                mayor_entrada=dict_entradas[nodo]
+                top1=nodo
+        lista1.append(top1)
+        for nodo in dict_salidas:
+            if dict_salidas[nodo]>mayor_salida and nodo not in lista2:
+                mayor_entrada=dict_salidas[nodo]
+                top2=nodo
+        lista2.append(top2)
+        for nodo in dict_menos:
+            if dict_menos[nodo]<menor_uso and nodo not in lista3:
+                menor_uso=dict_menos[nodo]
+                top3=nodo
+        lista3.append(top3)
+        a+=1
+    
+    for elemento in lista1:
+        lista_final_llegadas.append(diccionario[str(elemento)]["nombre"])
+    for elemento in lista2:
+        lista_final_salidas.append(diccionario[str(elemento)]["nombre"])
+    for elemento in lista3:
+        lista_final_menos.append(diccionario[str(elemento)]["nombre"])
+
+    retorno1= "Las estaciones top de llegada son: "+str(lista_final_llegadas)
+    retorno2= "Las estaciones top de salida son: "+str(lista_final_salidas)
+    retorno3= "Las estaciones top de menos son: "+str(lista_final_menos)
+    final=retorno1+retorno2+retorno3
+    return print(final)
+
 
 def distancia(grafo,lat1,lon1,lat2,lon2,analyzer):
     lista=gr.vertices(grafo)
     primero=lista["first"]
-    estacion1=primero["info"]
+    estacion1=str(primero["info"])
     R = 6373.0
-    lat_primero=radians(analyzer["stops"][estacion1]["start station latitude"])
-    lon_primero=radians(analyzer["stops"][estacion1]["start station longitude"])
+    lat_primero=radians(float(analyzer["diccionario"][estacion1]["latitud"]))
+    lon_primero=radians(float(analyzer["diccionario"][estacion1]["longitud"]))
 
     dlon_primero = lon_primero - lon1
     dlat_primero = lat_primero - lat1
@@ -520,13 +541,16 @@ def distancia(grafo,lat1,lon1,lat2,lon2,analyzer):
 
     cercana=distancia_1
     cercana_nombre=estacion1
+    cercana_final=estacion1
     destino=distancia_2
     destino_nombre=estacion1
+    destino_final=estacion1
     siguiente=primero["next"]
 
-    while next!=None:
-        lat_actual=radians(analyzer["stops"][siguiente["info"]]["start station latitude"])
-        lon_actual=radians(analyzer["stops"][siguiente["info"]]["start station longitude"])
+    while siguiente!=None:
+        estacion_actual=str(siguiente["info"])
+        lat_actual=radians(float(analyzer["diccionario"][estacion_actual]["latitud"]))
+        lon_actual=radians(float(analyzer["diccionario"][estacion_actual]["longitud"]))
         dlon1 = lon_actual - lon1
         dlat1 = lat_actual - lat1
         a1 = sin(dlat1 / 2)**2 + cos(lat1) * cos(lat_actual) * sin(dlon1 / 2)**2
@@ -535,6 +559,7 @@ def distancia(grafo,lat1,lon1,lat2,lon2,analyzer):
         if distance_actual1<cercana:
             cercana=distance_actual1
             cercana_nombre=siguiente["info"]
+            cercana_final=analyzer["diccionario"][estacion_actual]["nombre"]
         dlon2 = lon_actual - lon2
         dlat2 = lat_actual - lat2
         a2 = sin(dlat2 / 2)**2 + cos(lat2) * cos(lat_actual) * sin(dlon2 / 2)**2
@@ -543,10 +568,11 @@ def distancia(grafo,lat1,lon1,lat2,lon2,analyzer):
         if distance_actual2<destino:
             destino=distance_actual2
             destino_nombre=siguiente["info"]
+            destino_final=analyzer["diccionario"][estacion_actual]["nombre"]
         siguiente=siguiente["next"]
 
     busqueda=djk.Dijkstra(grafo,cercana_nombre)
     duracion=djk.distTo(busqueda,destino_nombre)
     pila=djk.pathTo(busqueda,destino_nombre)
-    retorno="Inicio: "+cercana_nombre+" "+"Destino: "+destino_nombre+" "+"Duración: "+duracion
+    retorno="Inicio: " +cercana_final+ " " +"Destino: " +destino_final+ " " +"Duración: "+str(duracion)
     return print(retorno, pila)
