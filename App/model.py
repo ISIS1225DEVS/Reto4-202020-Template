@@ -157,8 +157,36 @@ def entranviajes(grafo,word):
     return gr.indegree(grafo,word)
 
 # ==============================
-# Funciones Helper
+# REQUERIMIENTOS
 # ==============================
+
+def RutaCircular(analyzer, vertice): #REQUERIMIENTO 2
+    peso=0
+    lista_estaciones= lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None)
+    estructura_rutas=totalEdges(analyzer["connections"])
+    iter=it.newIterator(estructura_rutas)
+
+    while it.hasNext(iter):
+        arco= it.next(iter)
+        if arco["vertexA"]==vertice and sameCC(analyzer, vertice, arco["vertexB"]):
+            peso+=arco["weight"]
+            vertice= arco['vertexB'] 
+            
+            listasencillos=m.get(analyzer["trips"], arco["vertexA"])
+            sencillos= me.getValue(listasencillos)
+            iter2=it.newIterator(sencillos['trip'])
+            while it.hasNext(iter2):
+                cada_trip= it.next(iter2)
+                if cada_trip["end station id"]==arco["vertexB"]:
+                    lt.addLast(lista_estaciones, cada_trip["start station name"])
+                    lt.addLast(lista_estaciones, cada_trip["end station name"])
+                   
+            
+    return (peso, lista_estaciones)
+
+
+
+
 
 # ==============================
 # Funciones de Comparacion

@@ -115,8 +115,8 @@ def minimunEdges(analyzer):
 def tripsyear(analyzer,numero):
     return model.getTripsFecha(analyzer,numero)
 
-def rutacircular(analyzer, vertex):
-    return model.hallar_ruta_circular(analyzer, vertex)
+def RutaCircular(analyzer, vertex):
+    return model.RutaCircular(analyzer, vertex)
 
 def ruta(analyzer, startvertice, finalvertice):
     return model.hallar_ruta(analyzer, startvertice, finalvertice)

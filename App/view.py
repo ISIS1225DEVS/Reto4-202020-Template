@@ -84,13 +84,32 @@ def Requerimiento1():
             str(controller.sameCC(cont,Station1,Station2))+ "que pertenezcan al mismo cluster")
 
 def Requerimiento2():
+    tiempoInicial= input("Ingrese su tiempo incial disponible para un viaje: ")
+    tiempoFinal= input("Ingrese su tiempo final disponible para un viaje: ")
+    id_salida= input("Ingrese el id de la estacion de partida: ")
+    i=0
+    respuesta= controller.RutaCircular(cont, id_salida)
+    imprimirReq2(respuesta[0], respuesta[1], tiempoInicial, tiempoFinal)
+
+def imprimirReq2(pesoTotal, vertices, tiempoInicial, tiempoFinal):
+    i=0
+    if peso>int(tiempoInicial) and peso<int(tiempoFinal):
+        print("Estacion de salida: "+ vertices[0])
+        print("Estacion de llegada: "+ vertices[1])
+        i+=1
+    else:
+        print("No hay rutas circulares")
+    print("Total de rutas circulaes: "+ str(i))
+    print("Tiempo total del recorrido: "+ str(peso))
+
     
-def Requerimiento3();
-def Requerimiento4():
+# def Requerimiento3():
 
-def Requerimiento5():
+# def Requerimiento4():
 
-def Requerimiento6():
+# def Requerimiento5():
+
+# def Requerimiento6():
 
 
 
