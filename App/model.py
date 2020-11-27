@@ -31,8 +31,9 @@ from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
+from DISClib.ADT import stack
+from DISClib.DataStructures import mapentry as me
 assert config
-
 """
 En este archivo definimos los TADs que vamos a usar y las operaciones
 de creacion y consulta sobre las estructuras de datos.
@@ -42,42 +43,60 @@ de creacion y consulta sobre las estructuras de datos.
 #                       API
 # -----------------------------------------------------
 def newAnalyzer():
-    analyzer = {'citibikes':None}
-    
-    analyzer['citibikes'] = gr.newGraph(datastructure='ADJ_LIST',
-                                  directed=True,
-                                  size=1000,
-                                  comparefunction=compareStations)
+ try:
+        analyzer = {
+                    'trips': None,
+                    'connections': None,
+                    'bikeid': None,
+                    'components': None,
+                    'years': None
+                    
+                    }
 
+        analyzer['trips'] = m.newMap(numelements=14000,
+                                     maptype='CHAINING',
+                                     comparefunction=compareStations)
+
+        analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
+                                              directed=True,
+                                              size=14000,
+                                              comparefunction=compareStations)
+        analyzer['years'] = m.newMap(numelements=14000,
+                                     maptype='CHAINING',
+                                     comparefunction=compareDates)
+        
+        return analyzer
+ except Exception as exp:
+        error.reraise(exp, 'model:newAnalyzer')
 
 # Funciones para agregar informacion al grafo
-def addTrip(citibike, trip):
+def addTrip(analyzer, trip):
     """
 Añade un viaje al grafo 
     """
     origin = trip['start station id']
     destination = trip['end station id']
     duration = int(trip['tripduration'])
-    addStation(citibike, origin)
-    addStation(citibike, destination)
-    addConnection(citibike, origin, destination, duration)
+    addStation(analyzer, origin)
+    addStation(analyzer, destination)
+    addConnection(analyzer, origin, destination, duration)
 
-def addStation(citibike, stationid):
+def addStation(analyzer, stationid):
     """
     Adiciona una estación como un vertice del grafo
     """
-    if not  gr.containsVertex(citibike ['graph'], stationid):
-            gr.insertVertex(citibike ['graph'], stationid)
-    return citibike
+    if not  gr.containsVertex(analyzer ['connections'], stationid):
+            gr.insertVertex(analyzer ['connections'], stationid)
+    return analyzer
 
-def addConnection(citibike, origin, destination, duration):
+def addConnection(analyzer, origin, destination, duration):
     """
     Adiciona un arco entre dos estaciones
     """
-    edge = gr.getEdge(citibike ['graph'], origin, destination)
+    edge = gr.getEdge(analyzer ['connections'], origin, destination)
     if edge is None:
-        gr.addEdge(citibike['graph'], origin, destination, duration)
-    return citibike
+        gr.addEdge(analyzer['connections'], origin, destination, duration)
+    return analyzer
 
 # ==============================
 # Funciones de consulta
@@ -93,27 +112,126 @@ def minimum_path(analyzer, initialStation,value):
 
     
 
-def numSCC(graph,sc):
-    sc = scc.KosarajuSCC(graph)
+def numSCC(analyzer):
+    sc = scc.KosarajuSCC(analyzer["connections"])
     return scc.connectedComponents(sc)
-
-def sameCC(sc, station1, station2):
+    
+def sameCC(analyzer, station1, station2):
+    sc = scc.KosarajuSCC(analyzer["connections"])
     return scc.stronglyConnected(sc, station1, station2)
 
 
+def totalVertex(analyzer):
+    """
+    Retorna el total de estaciones (vertices) del grafo
+    """
+    return gr.numVertices(analyzer['connections'])
+
+
+def totalConnections(analyzer):
+    """
+    Retorna el total arcos del grafo
+    """
+    return gr.numEdges(analyzer['connections'])
+
+def totalEdges(grafo):
+    """
+    Retorna todos los arcos del grafo
+    """
+    return gr.edges(grafo)
+
+def totalVertices(grafo):
+    """
+    Retorna todos los vertices del grafo
+    """
+    return gr.vertices(grafo)
+
+def arcosXvertex(grafo,word):
+    """
+    Retorna arcos del vertice
+    """
+    a=gr.indegree(grafo,word)
+    b=gr.outdegree(grafo,word)
+    return a+b
+
+def salenviajes(grafo,word):
+    """
+    numero de arcos que salen del vertex (word)
+    """
+    return gr.outdegree(grafo,word)
+
+def entranviajes(grafo,word):
+    """
+    numero de arcos que entran al vertex (word)
+    """
+    return gr.indegree(grafo,word)
+
 # ==============================
-# Funciones Helper
+# REQUERIMIENTOS
 # ==============================
+
+def RutaCircular(analyzer, vertice): #REQUERIMIENTO 2
+    peso=0
+    lista_estaciones= lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None)
+    estructura_rutas=totalEdges(analyzer["connections"])
+    iter=it.newIterator(estructura_rutas)
+
+    while it.hasNext(iter):
+        arco= it.next(iter)
+        if arco["vertexA"]==vertice and sameCC(analyzer, vertice, arco["vertexB"]):
+            peso+=arco["weight"]
+            vertice= arco['vertexB'] 
+            
+            listasencillos=m.get(analyzer["trips"], arco["vertexA"])
+            sencillos= me.getValue(listasencillos)
+            iter2=it.newIterator(sencillos['trip'])
+            while it.hasNext(iter2):
+                cada_trip= it.next(iter2)
+                if cada_trip["end station id"]==arco["vertexB"]:
+                    lt.addLast(lista_estaciones, cada_trip["start station name"])
+                    lt.addLast(lista_estaciones, cada_trip["end station name"])
+                   
+            
+    return (peso, lista_estaciones)
+
+
+
+
 
 # ==============================
 # Funciones de Comparacion
 # ==============================
-def compareStations(station, keyvaluestop):
-
-    stationcode  = keyvaluestop['key']
-    if station == stationcode:
+def compareStations(stat, keyvalue):
+    """
+    Compara dos estaciones
+    """
+    code = keyvalue['key']
+    if (stat == code):
         return 0
-    elif station > stationcode:
+    elif (stat > code):
         return 1
-    else: 
+    else:
+        return -1
+
+def compareBikeid(bike, keyvaluebike):
+    """
+    Compara dos bikeids
+    """
+    bikecode = keyvaluebike['key']
+    if (bike == bikecode):
+        return 0
+    elif (bike > bikecode):
+        return 1
+    else:
+        return -1
+
+def compareDates(date1, date2):
+    date20=me.getKey(date2)
+    #print(date1)
+    #print(date2)
+    if (date1 == date20):
+        return 0
+    elif (date1 > date20):
+        return 1
+    else:
         return -1

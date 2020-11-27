@@ -34,7 +34,7 @@ assert config
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
-
+import controller
 
 servicefile = '201801-1-citibike-tripdata.csv'
 initialStation = None
@@ -50,62 +50,72 @@ def printMenu():
     print("*******************************************")
     print("Bienvenido")
     print("1- Inicializar Analizador")
-    print("2- Crgar datos de Citybike")
-    print("3- Cantidad de clusters de Viajes")
-    print("4- Ruta turística Circular ")
-    print("5- Estaciones críticas")
-    print("6- Ruta turística por resistencia  ")
-    print("7- Recomendador de Rutas ")
+    print("2- Cargar datos de Citibike")
+    print("3- REQUERIMIENTO 1")
+    print("4- REQUERIMIENTO 2")
+    print("5- REQUERIMIENTO 3")
+    print("6- REQUERIMIENTO 4")
+    print("7- REQUERIMIENTO 5")
+    print("8- REQUERIMIENTO 6")
     print("0- Salir")
     print("*******************************************")
 
 
-def optionTwo():
+def CargarDatos(): #CARGAR INFORMACION
     print("\nCargando información de transporte de singapur ....")
-    controller.loadTrips(servicefile)
+    # para todos los archivos
+    #controller.loadTrips(cont)
+    # para uno solo
+    controller.loadFile(cont, servicefile)
     numedges = controller.totalConnections(cont)
-    numvertex = controller.totalStops(cont)
+    numvertex = controller.totalVertex(cont)
     print('Numero de vertices: ' + str(numvertex))
     print('Numero de arcos: ' + str(numedges))
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
 
+def Requerimiento1():
+    Station1= input("Ingrese una estacion de interés: ")
+    Station2= input("Ingrese otra estacion de interés: ")
+    print('El número de componentes conectados es: ' + 
+            str(controller.numSCC(cont)))
+    print("Entre "+str(Station1)+" y "+str(Station2)+": "+
+            str(controller.sameCC(cont,Station1,Station2))+ "que pertenezcan al mismo cluster")
 
-def optionThree():
-    print('El número de componentes conectados es: ' +
-          str(controller.connectedComponents(cont)))
+def Requerimiento2():
+    tiempoInicial= input("Ingrese su tiempo incial disponible para un viaje: ")
+    tiempoFinal= input("Ingrese su tiempo final disponible para un viaje: ")
+    id_salida= input("Ingrese el id de la estacion de partida: ")
+    i=0
+    respuesta= controller.RutaCircular(cont, id_salida)
+    imprimirReq2(respuesta[0], respuesta[1], tiempoInicial, tiempoFinal)
+
+def imprimirReq2(pesoTotal, vertices, tiempoInicial, tiempoFinal):
+    i=0
+    if peso>int(tiempoInicial) and peso<int(tiempoFinal):
+        print("Estacion de salida: "+ vertices[0])
+        print("Estacion de llegada: "+ vertices[1])
+        i+=1
+    else:
+        print("No hay rutas circulares")
+    print("Total de rutas circulaes: "+ str(i))
+    print("Tiempo total del recorrido: "+ str(peso))
+
+    
+# def Requerimiento3():
+
+# def Requerimiento4():
+
+# def Requerimiento5():
+
+# def Requerimiento6():
 
 
-# def optionFour():
-#     controller.minimumCostPaths(cont, initialStation)
 
-
-# def optionFive():
-#     haspath = controller.hasPath(cont, destStation)
-#     print('Hay camino entre la estación base : ' +
-#           'y la estación: ' + destStation + ': ')
-#     print(haspath)
-
-
-# def optionSix():
-#     path = controller.minimumCostPath(cont, destStation)
-#     if path is not None:
-#         pathlen = stack.size(path)
-#         print('El camino es de longitud: ' + str(pathlen))
-#         while (not stack.isEmpty(path)):
-#             stop = stack.pop(path)
-#             print(stop)
-#     else:
-#         print('No hay camino')
-
-
-# def optionSeven():
-#     maxvert, maxdeg = controller.servedRoutes(cont)
-#     print('Estación: ' + maxvert + '  Total rutas servidas: '
-#          + str(maxdeg))
-
-
+"""
+Menu principal
+"""
 """
 Menu principal
 """
@@ -119,36 +129,28 @@ while True:
         cont = controller.init()
 
     elif int(inputs[0]) == 2:
-        executiontime = timeit.timeit(optionTwo, number=1)
+        executiontime = timeit.timeit(CargarDatos, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
-
     elif int(inputs[0]) == 3:
-        executiontime = timeit.timeit(optionThree, number=1)
+        executiontime = timeit.timeit(Requerimiento1, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
-
-    # elif int(inputs[0]) == 4:
-    #     msg = "Estación Base: BusStopCode-ServiceNo (Ej: 75009-10): "
-    #     initialStation = input(msg)
-    #     executiontime = timeit.timeit(optionFour, number=1)
-    #     print("Tiempo de ejecución: " + str(executiontime))
-
-    # elif int(inputs[0]) == 5:
-    #     destStation = input("Estación destino (Ej: 15151-10): ")
-    #     executiontime = timeit.timeit(optionFive, number=1)
-    #     print("Tiempo de ejecución: " + str(executiontime))
-
-    # elif int(inputs[0]) == 6:
-    #     destStation = input("Estación destino (Ej: 15151-10): ")
-    #     executiontime = timeit.timeit(optionSix, number=1)
-    #     print("Tiempo de ejecución: " + str(executiontime))
-
-    # elif int(inputs[0]) == 7:
-    #     executiontime = timeit.timeit(optionSeven, number=1)
-    #     print("Tiempo de ejecución: " + str(executiontime))
-
+    elif int(inputs[0]) == 4:
+        executiontime = timeit.timeit(Requerimiento2, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+    elif int(inputs[0]) == 5:
+        executiontime = timeit.timeit(Requerimiento3, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+    elif int(inputs[0]) == 6:
+        executiontime = timeit.timeit(Requerimiento4, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+    elif int(inputs[0]) == 7:
+        executiontime = timeit.timeit(Requerimiento5, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
+    elif int(inputs[0]) == 8:
+        executiontime = timeit.timeit(Requerimiento6, number=1)
+        print("Tiempo de ejecución: " + str(executiontime))
     else:
         sys.exit(0)
 sys.exit(0)
 
 
-"""prueba"""
