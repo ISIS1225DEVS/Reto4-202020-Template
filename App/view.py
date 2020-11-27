@@ -34,7 +34,7 @@ assert config
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
-
+import controller
 
 servicefile = '201801-1-citibike-tripdata.csv'
 initialStation = None
