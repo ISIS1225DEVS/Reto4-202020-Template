@@ -23,10 +23,20 @@
  * Dario Correal
  *
  """
-
 import config as cf
+
 from App import model
 import csv
+import timeit
+import config
+from DISClib.ADT.graph import gr
+from DISClib.ADT import map as m
+from DISClib.ADT import list as lt
+from DISClib.DataStructures import listiterator as it
+from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dijsktra as djk
+from DISClib.Utils import error as error
+assert config
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -48,23 +58,21 @@ def init():
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
 # ___________________________________________________
-def loadTrips(citibike):
-    for filename in os.listdir(cf.data_dir):
+def loadTrips(bikes):
+    
+    for filename in os.listdir(cf.data_dir):    
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
-            loadFile(analyzer, filename)
-    return analyzer
+            loadFile(bikes, filename)
+    return bikes
 
-
-def loadFile(citibike, tripfile):
-    """
-    """
+def loadFile(bikes, tripfile):
     tripfile = cf.data_dir + tripfile
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     for trip in input_file:
-        model.addTrip(citibike, trip)
-    return citibike
+        model.addTrip(bikes, trip)
+    return bikes
 
 
 
@@ -72,9 +80,40 @@ def loadFile(citibike, tripfile):
 #  Funciones para consultas
 # ___________________________________________________
 
-def kosajaru(graph, sc):
-    sc = model.numSCC(graph,sc)
-    return sc 
-def stronglyconnected(sc, station1, station2):
-    sc = model.sameCC(sc,station1,station2)
-    return sc 
+
+def numSCC(analyzer):
+    return model.numSCC(analyzer)
+
+def sameCC(analyzer, station1, station2):
+    return model.sameCC(analyzer, station1, station2)
+
+def totalVertex(analyzer):
+    """
+    Total de paradas de autobus
+    """
+    return model.totalVertex(analyzer)
+
+
+def totalConnections(analyzer):
+    """
+    Total de enlaces entre las paradas
+    """
+    return model.totalConnections(analyzer)
+
+def minimunEdges(analyzer):
+    """
+    Encontrar estaciones con menos arcos
+    """
+    return model.Never_top(analyzer)
+
+def tripsyear(analyzer,numero):
+    return model.getTripsFecha(analyzer,numero)
+
+def RutasCirculares(analyzer, vertex, limiteInicial, limiteFinal): #REQUERIMIENTO 2
+    return model.RutasCirculares(analyzer, vertex, limiteInicial, limiteFinal)
+
+def RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL): #REQUERIMIENTO 6
+    return model.RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL)
+
+def ruta(analyzer, startvertice, finalvertice):
+    return model.hallar_ruta(analyzer, startvertice, finalvertice)
