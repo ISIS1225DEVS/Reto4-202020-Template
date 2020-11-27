@@ -30,7 +30,8 @@ from App import controller
 from DISClib.ADT import stack
 import timeit
 assert config
-
+from DISClib.ADT import list as lt
+from DISClib.DataStructures import listiterator as it
 # ___________________________________________________
 #  Variables
 # ___________________________________________________
@@ -88,8 +89,29 @@ def Requerimiento2():
     tiempoFinal= input("Ingrese su tiempo final disponible para un viaje: ")
     id_salida= input("Ingrese el id de la estacion de partida: ")
     i=0
-    respuesta= controller.RutaCircular(cont, id_salida)
-    imprimirReq2(respuesta[0], respuesta[1], tiempoInicial, tiempoFinal)
+    respuesta= controller.RutasCirculares(cont, id_salida, tiempoInicial, tiempoFinal)
+    
+    iter=it.newIterator(respuesta)
+    i=0
+    print("Ruta #"+"\t"+"\t"+"NOMBRE ESTACION"+"\t"+"\t"+"DURACION")
+    print("-------------------------------------------------------")
+    while it.hasNext(iter):
+        ruta_circular= it.next(iter)
+        cantidad_rutas=lt.size(ruta_circular) 
+        iter2=it.newIterator(ruta_circular)
+        while it.hasNext(iter2):
+            informacion= it.next(iter2)
+            
+            P
+            duracion= informacion['duracion']
+            print(str(i)+"\t"+"\t"+ nombre+"\t"+"\t"+str(duracion))
+            
+            # nombre=informacion['estacion1']]['value']
+            # print(nombre)
+            i+=1
+    print("Rutas Circulares encontradas: "+ str(cantidad_rutas))
+
+    # imprimirReq2(respuesta[0], respuesta[1], tiempoInicial, tiempoFinal)
 
 def imprimirReq2(pesoTotal, vertices, tiempoInicial, tiempoFinal):
     i=0
@@ -109,7 +131,21 @@ def imprimirReq2(pesoTotal, vertices, tiempoInicial, tiempoFinal):
 
 # def Requerimiento5():
 
-# def Requerimiento6():
+def Requerimiento6():
+   
+    lat1 = float(input("Inserte la latitud de salida: "))
+    lon1 = float(input("Inserte la longitud de salida: "))
+    lat2 = float(input("Inserte la latitud de llegada: "))
+    lon2 = float(input("Inserte la longitud de llegada: "))
+    res = controller.RutaInteresTuristico(cont, lat1, lon1, lat2, lon2)
+    
+    print("La estación más cercana a la posición {0}, {1} (salida) es: {2}".format(lat1,lon1,res[0]))
+    print("La estación más cercana a la posición {0}, {1} (llegada) es: {2}".format(lat2,lon2,res[1]))
+    if res[2] != None:
+        print("La ruta más corta desde la estación {0} hasta la estación {1} es {2}.\nEsta ruta tiene una duración de {3}.".format(res[0],res[1],res[2],res[3]))
+    else:
+        print("No existe una ruta entre estas dos estaciones.")
+    
 
 
 

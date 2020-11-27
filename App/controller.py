@@ -100,12 +100,6 @@ def totalConnections(analyzer):
     """
     return model.totalConnections(analyzer)
 
-def hallartop3(analyzer,vertice):
-    """
-    Encontrar Top3 salida +
-    """
-    return model.Analizar_Top_Entry(analyzer,vertice)
-
 def minimunEdges(analyzer):
     """
     Encontrar estaciones con menos arcos
@@ -115,8 +109,11 @@ def minimunEdges(analyzer):
 def tripsyear(analyzer,numero):
     return model.getTripsFecha(analyzer,numero)
 
-def RutaCircular(analyzer, vertex):
-    return model.RutaCircular(analyzer, vertex)
+def RutasCirculares(analyzer, vertex, limiteInicial, limiteFinal): #REQUERIMIENTO 2
+    return model.RutasCirculares(analyzer, vertex, limiteInicial, limiteFinal)
+
+def RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL): #REQUERIMIENTO 6
+    return model.RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL)
 
 def ruta(analyzer, startvertice, finalvertice):
     return model.hallar_ruta(analyzer, startvertice, finalvertice)

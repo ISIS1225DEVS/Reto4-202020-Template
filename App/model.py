@@ -47,16 +47,19 @@ def newAnalyzer():
         analyzer = {
                     'trips': None,
                     'connections': None,
-                    'bikeid': None,
+                    'EstacionesXid': None,
                     'components': None,
-                    'years': None
+                    'years': None,
+                    'coordinates': None 
                     
                     }
 
         analyzer['trips'] = m.newMap(numelements=14000,
                                      maptype='CHAINING',
                                      comparefunction=compareStations)
-
+        analyzer['EstacionesXid'] = m.newMap(numelements=14000,
+                                     maptype='CHAINING',
+                                     comparefunction=compareBikeid)
         analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
                                               directed=True,
                                               size=14000,
@@ -64,6 +67,8 @@ def newAnalyzer():
         analyzer['years'] = m.newMap(numelements=14000,
                                      maptype='CHAINING',
                                      comparefunction=compareDates)
+        analyzer['coordinates'] = m.newMap(numelements=1000,
+                                comparefunction=compareStations)
         
         return analyzer
  except Exception as exp:
@@ -76,6 +81,10 @@ Añade un viaje al grafo
     """
     origin = trip['start station id']
     destination = trip['end station id']
+    nombreEstacionOrigen= trip['start station name']
+    nombreEstacionDestino= trip['end station name']
+    m.put(analyzer['EstacionesXid'], origin, nombreEstacionOrigen)
+    m.put(analyzer['EstacionesXid'], destination, nombreEstacionDestino)
     duration = int(trip['tripduration'])
     addStation(analyzer, origin)
     addStation(analyzer, destination)
@@ -93,10 +102,41 @@ def addConnection(analyzer, origin, destination, duration):
     """
     Adiciona un arco entre dos estaciones
     """
+    promedio=None
     edge = gr.getEdge(analyzer ['connections'], origin, destination)
     if edge is None:
         gr.addEdge(analyzer['connections'], origin, destination, duration)
+    elif edge is not None and promedio is None:
+        numero_viajes=1
+        promedio=int(edge["weight"])
+        promedio =(promedio*numero_viajes + duration)/(numero_viajes + 1)
+        numero_viajes += 1
+        edge["weight"]=promedio
+    else:
+        promedio=int(edge["weight"])
+        promedio =(promedio*numero_viajes + duration)/(numero_viajes + 1)
+        numero_viajes += 1
+        edge["weight"]=promedio
     return analyzer
+
+def addCoordinates(analyzer, trip):
+    """
+    Para el req 6
+    """
+    entry = analyzer['coordinates']
+    stationStart = (trip['start station latitude'], trip['start station longitude'], 0)
+    stationEnd = (trip['end station latitude'], trip['end station longitude'], 1)
+
+    e1 = m.get(entry, trip['start station id'])
+    if e1 is None:
+        m.put(entry, trip['start station id'], stationStart)
+
+    e2 = m.get(entry, trip['end station id'])
+    if e2 is None:
+        m.put(entry, trip['end station id'], stationEnd)
+
+    return analyzer 
+
 
 # ==============================
 # Funciones de consulta
@@ -159,29 +199,48 @@ def entranviajes(grafo,word):
 # REQUERIMIENTOS
 # ==============================
 
-def RutaCircular(analyzer, vertice): #REQUERIMIENTO 2
+def RutasCirculares(analyzer, vertice, limiteInicial, limiteFinal): #REQUERIMIENTO 2
     peso=0
-    lista_estaciones= lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None)
-    estructura_rutas=totalEdges(analyzer["connections"])
-    iter=it.newIterator(estructura_rutas)
+    
+    rutas_circulares_total=  lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None) #agrupar todas las rutas cicrulares
+    
+    dijkstraIda= djk.Dijkstra(analyzer['connections'], vertice)
+    vertices=gr.vertices(analyzer['connections'])
 
-    while it.hasNext(iter):
-        arco= it.next(iter)
-        if arco["vertexA"]==vertice and sameCC(analyzer, vertice, arco["vertexB"]):
-            peso+=arco["weight"]
-            vertice= arco['vertexB'] 
+    iter2= it.newIterator(vertices)
+    while it.hasNext(iter2):
+        datos_rutas= lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None) # info todas las rutas cicrulares
+        ruta_circular= lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None) #lista de nombres de estaciones en la ruta circular
+        vertice2= it.next(iter2)
+        caminos_ida= djk.pathTo(dijkstraIda, vertice2) #grafo conocer vertices
+        dijkstraVenida= djk.Dijkstra(analyzer['connections'], vertice2)
+        caminos_venida= djk.pathTo(dijkstraVenida, vertice)
+        if not caminos_venida or not caminos_ida:
+            continue
+        while not stack.isEmpty(caminos_ida):
+            dato=stack.pop(caminos_ida)
+            lt.addLast(ruta_circular, dato)
+    
+        while not stack.isEmpty(caminos_venida):
+            dato=stack.pop(caminos_venida)
+            lt.addLast(ruta_circular, dato)
+    
+    # lt.addLast(rutas_circulares_total, ruta_circular)
+
+        iter=it.newIterator(ruta_circular)
+        while it.hasNext(iter):
+            arco= it.next(iter)
+            duracion=arco['weight']
+            if (int(limiteInicial)<duracion and duracion<int(limiteFinal)):
+                estacion1=m.get(analyzer['EstacionesXid'], arco['vertexA'])
+                estacion2=m.get(analyzer['EstacionesXid'], arco['vertexB'])
+                lt.addLast(datos_rutas, {"estacion1": estacion1, "estacion2":estacion2, "duracion":duracion})
             
-            listasencillos=m.get(analyzer["trips"], arco["vertexA"])
-            sencillos= me.getValue(listasencillos)
-            iter2=it.newIterator(sencillos['trip'])
-            while it.hasNext(iter2):
-                cada_trip= it.next(iter2)
-                if cada_trip["end station id"]==arco["vertexB"]:
-                    lt.addLast(lista_estaciones, cada_trip["start station name"])
-                    lt.addLast(lista_estaciones, cada_trip["end station name"])
-                   
-            
-    return (peso, lista_estaciones)
+        lt.addLast(rutas_circulares_total, datos_rutas)
+
+
+    return (rutas_circulares_total)
+# def RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL): #REQUERIMIENTO 6
 
 def minimum_path(analyzer, initialStation,value):
     analyzer['paths'] = djk.Dijkstra(analyzer['trip'],initialStation)
