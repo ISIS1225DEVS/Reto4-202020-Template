@@ -93,7 +93,7 @@ def Requerimiento2():
     
     iter=it.newIterator(respuesta)
     i=0
-    print("Ruta #"+"\t"+"\t"+"NOMBRE ESTACION"+"\t"+"\t"+"DURACION")
+    print("Ruta #"+"\t"+"\t"+"ESTACION INCIAL"+"\t"+"\t"+"ESTACION FINAL"+"\t"+"\t"+"DURACION")
     print("-------------------------------------------------------")
     while it.hasNext(iter):
         ruta_circular= it.next(iter)
@@ -101,10 +101,10 @@ def Requerimiento2():
         iter2=it.newIterator(ruta_circular)
         while it.hasNext(iter2):
             informacion= it.next(iter2)
-            
-            P
+            nombre= informacion['estacion1']['value']
+            nombre2=informacion['estacion2']['value']
             duracion= informacion['duracion']
-            print(str(i)+"\t"+"\t"+ nombre+"\t"+"\t"+str(duracion))
+            print(str(i)+"\t"+"\t"+ nombre+"\t"+"\t"+ nombre2+"\t"+"\t"+str(duracion))
             
             # nombre=informacion['estacion1']]['value']
             # print(nombre)
