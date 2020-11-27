@@ -141,6 +141,16 @@ def addCoordinates(analyzer, trip):
 # ==============================
 # Funciones de consulta
 # ==============================
+def minimum_path(analyzer, initialStation,value):
+    analyzer['paths'] = djk.Dijkstra(analyzer['trip'],initialStation)
+    valor_recorridos = gr.numVertices(analyzer['paths'])['duration']
+    if valor_recorridos < value:
+        return analyzer
+    else:
+        return 0
+
+
+    
 
 def numSCC(analyzer):
     sc = scc.KosarajuSCC(analyzer["connections"])
