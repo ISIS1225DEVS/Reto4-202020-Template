@@ -23,8 +23,8 @@
  * Dario Correal
  *
  """
-
 import config as cf
+
 from App import model
 import csv
 import timeit
@@ -59,32 +59,64 @@ def init():
 #  de datos en los modelos
 # ___________________________________________________
 def loadTrips(bikes):
-    for filename in cf.file_dir(cf.data_dir):    
+    
+    for filename in os.listdir(cf.data_dir):    
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
             loadFile(bikes, filename)
     return bikes
 
 def loadFile(bikes, tripfile):
-    """
-    """
-    total_trips = 0
     tripfile = cf.data_dir + tripfile
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     for trip in input_file:
         model.addTrip(bikes, trip)
-        total_trips += 1 
-    return [bikes,total_trips]
+    return bikes
+
 
 
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
 
-def kosajaru(graph, sc):
-    sc = model.numSCC(graph,sc)
-    return sc 
-def stronglyconnected(sc, station1, station2):
-    sc = model.sameCC(sc,station1,station2)
-    return sc 
+
+def numSCC(analyzer):
+    return model.numSCC(analyzer)
+
+def sameCC(analyzer, station1, station2):
+    return model.sameCC(analyzer, station1, station2)
+
+def totalVertex(analyzer):
+    """
+    Total de paradas de autobus
+    """
+    return model.totalVertex(analyzer)
+
+
+def totalConnections(analyzer):
+    """
+    Total de enlaces entre las paradas
+    """
+    return model.totalConnections(analyzer)
+
+def hallartop3(analyzer,vertice):
+    """
+    Encontrar Top3 salida +
+    """
+    return model.Analizar_Top_Entry(analyzer,vertice)
+
+def minimunEdges(analyzer):
+    """
+    Encontrar estaciones con menos arcos
+    """
+    return model.Never_top(analyzer)
+
+def tripsyear(analyzer,numero):
+    return model.getTripsFecha(analyzer,numero)
+
+def rutacircular(analyzer, vertex):
+    return model.hallar_ruta_circular(analyzer, vertex)
+
+def ruta(analyzer, startvertice, finalvertice):
+    return model.hallar_ruta(analyzer, startvertice, finalvertice)
