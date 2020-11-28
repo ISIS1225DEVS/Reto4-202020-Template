@@ -166,6 +166,9 @@ def dfsVertex2(search, graph, vertex,time):
                    
                 dfsVertex2(search,graph,w,time)
         return search
+
+
+        
     except Exception as exp:
         error.reraise(exp, 'dfs:dfsVertex')
 
