@@ -29,10 +29,12 @@ from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
-from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import scc as scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
 from DISClib.DataStructures import edge as ed
+from DISClib.DataStructures import mapentry as me
+from DISClib.Algorithms.Graphs import dfs as dfs
 assert config
 
 """
@@ -70,14 +72,18 @@ def newAnalyzer():
                     'paths': None
                     }
 
-        analyzer['stops'] = m.newMap(numelements=1001,
+        analyzer['stops'] = m.newMap(numelements=10,
                                      maptype='PROBING',
                                      comparefunction=compareStopIds)
 
         analyzer['connections'] = gr.newGraph(datastructure='ADJ_LIST',
                                               directed=True,
-                                              size=14000,
+                                              size=14,
                                               comparefunction=compareStopIds)
+        analyzer['birth year']= m.newMap(numelements=10,
+                                     maptype='PROBING',
+                                     comparefunction=compareStopIds)
+        analyzer["nombres"]={}
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:newAnalyzer')
@@ -109,13 +115,95 @@ def addTrip(citibike, trip):
     """
     Añade un viaje
     """
-    origin = trip['start station id']
-    destination = trip['end station id']
-    duration = int(trip['tripduration'])
-    addStation(citibike, origin)
-    addStation(citibike, destination)
-    addConnection(citibike, origin, destination, duration)
-     
+    if trip['start station id']!=trip['end station id']:
+        origin = trip['start station id']
+        destination = trip['end station id']
+        duration = int(trip['tripduration'])
+        addStation(citibike, origin)
+        addStation(citibike, destination)
+        addConnection(citibike, origin, destination, duration)
+        citibike[trip['start station id']]=trip['start station name']
+        citibike[trip['end station id']]=trip["end station name"]
+        if int(trip["birth year"])>2010:
+            if m.contains(citibike["birth year"],"0-10")==True:
+                lista=me.getValue(m.get(citibike["birth year"],"0-10"))
+                lista[trip['start station id']]=trip["start station name"]
+                lista[trip['end station id']]=trip["end station name"]
+                m.put(citibike["birth year"],"0-10",lista)
+                
+                
+               
+            else:
+                m.put(citibike["birth year"],"0-10",{trip['start station id']:trip["start station name"]})
+                m.put(citibike["birth year"],"0-10",{trip['end station id']:trip["end station name"]})
+        elif int(trip["birth year"])>2000:
+            if m.contains(citibike["birth year"],"10-20")==True:
+                lista=me.getValue(m.get(citibike["birth year"],"10-20"))
+                lista[trip['start station id']]=trip["start station name"]
+                lista[trip['end station id']]=trip["end station name"]
+                m.put(citibike["birth year"],"10-20",lista)
+                
+                
+                
+            else:
+                m.put(citibike["birth year"],"10-20",{trip['start station id']:trip["start station name"]})
+                m.put(citibike["birth year"],"10-20",{trip['end station id']:trip["end station name"]})
+        elif int(trip["birth year"])>1990:
+            if m.contains(citibike["birth year"],"20-30")==True:
+                lista=me.getValue(m.get(citibike["birth year"],"20-30"))
+                lista[trip['start station id']]=trip["start station name"]
+                lista[trip['end station id']]=trip["end station name"]
+                m.put(citibike["birth year"],"20-30",lista)
+ 
+                
+            else:
+                m.put(citibike["birth year"],"20-30",{trip['start station id']:trip["start station name"]})
+                m.put(citibike["birth year"],"20-30",{trip['end station id']:trip["end station name"]})
+                
+        elif int(trip["birth year"])>1980:
+            if m.contains(citibike["birth year"],"30-40")==True:
+                lista=me.getValue(m.get(citibike["birth year"],"30-40"))
+                lista[trip['start station id']]=trip["start station name"]
+                lista[trip['end station id']]=trip["end station name"]
+                m.put(citibike["birth year"],"30-40",lista)
+         
+                
+            else:
+                m.put(citibike["birth year"],"30-40",{trip['start station id']:trip["start station name"]})
+                m.put(citibike["birth year"],"30-40",{trip['end station id']:trip["end station name"]})
+        elif int(trip["birth year"])>1970:
+            if m.contains(citibike["birth year"],"40-50")==True:
+                lista=me.getValue(m.get(citibike["birth year"],"40-50"))
+                lista[trip['start station id']]=trip["start station name"]
+                lista[trip['end station id']]=trip["end station name"]
+                m.put(citibike["birth year"],"40-50",lista)
+         
+            else:
+                m.put(citibike["birth year"],"40-50",{trip['start station id']:trip["start station name"]})
+                m.put(citibike["birth year"],"40-50",{trip['end station id']:trip["end station name"]})
+        elif int(trip["birth year"])>1960:
+            if m.contains(citibike["birth year"],"50-60")==True:
+                lista=me.getValue(m.get(citibike["birth year"],"50-60"))
+                lista[trip['start station id']]=trip["start station name"]
+                lista[trip['end station id']]=trip["end station name"]
+                m.put(citibike["birth year"],"50-60",lista)
+            else:
+               m.put(citibike["birth year"],"50-60",{trip['start station id']:trip["start station name"]})
+               m.put(citibike["birth year"],"50-60",{trip['end station id']:trip["end station name"]})
+        else:
+            if m.contains(citibike["birth year"],"mas de 60")==True:
+                
+                lista=me.getValue(m.get(citibike["birth year"],"mas de 60"))
+                lista[trip['start station id']]=trip["start station name"]
+                lista[trip['end station id']]=trip["end station name"]
+                m.put(citibike["birth year"],"mas de 60",lista)
+            else:
+               m.put(citibike["birth year"],"mas de 60",{trip['start station id']:trip["start station name"]})
+               m.put(citibike["birth year"],"mas de 60",{trip['end station id']:trip["end station name"]})
+
+
+
+        
     return citibike
 
 
@@ -135,9 +223,9 @@ def addConnection(citibike, origin, destination, duration):
     """
     edge = gr.getEdge(citibike['connections'], origin, destination)
     if edge is None:
-        gr.addEdge(citibike['connections'], origin, destination, distance)
+        gr.addEdge(citibike['connections'], origin, destination, duration)
     else:
-        ed.averageWeight(edge,duration)
+        ed.updateAverageWeight(edge,duration)
 
     return citibike
 
@@ -301,7 +389,7 @@ def createCicleUnderTime(grafo, vertice, tiempo1, tiempo2=0):
     ciclos = None
     for ruta in ciclo:
         costo = ciclo[ruta][weihgt] = (gr.numVertices(ciclo[ruta])-1) * 20
-        if costo <= tiempo
+        if costo <= tiempo:
             lt.addFirst(lista, ciclo[ruta])
     return lista
 
@@ -420,3 +508,116 @@ def conectados_total(grafo):
                     contador+=1
 
     return contador
+
+
+
+
+
+def rutas_por_min(estacion,time,grafo,caminos):
+    """se intento cambiar la estrucutra de dfs pero no se logro mayor cosa que un diccionario con llaves el id de las estaciones y los valores son las estaciones adyacentes
+    mas sin embargo no sirvio de mucho para dar una forma de lista para dar un camino hacia una ubicacion.
+    
+    se intento implementar esta funcion que daba una lista de lista sin embargo el analisis de esta estructura se volvio muy dificil de organizar """
+    adjlst= gr.adjacents(grafo["connections"],estacion)
+    adjslstiter = it.newIterator(adjlst)
+    while (it.hasNext(adjslstiter)):
+        x=it.next(adjslstiter)
+        a=gr.getEdge(grafo["connections"],estacion,x)
+        b=ed.weight(a)
+        print(time>=b)
+        if a != None:
+            tiempo=ed.weight(a)
+            
+            if time>=b:
+                lista=[estacion,b,x]
+                tiempo=time-tiempo
+                lista.append(rutas_por_min(estacion,tiempo,grafo,lista))
+                caminos.append(lista)
+    return caminos
+    
+
+def organizar(dicionario,estacion,lista):
+    return(lista)
+
+
+
+
+
+
+    
+        
+
+def rango_edades(grafo,edad):
+    mayor_salida=0
+    mayor_entrada=0
+    nombre_salida=None
+    nombre_entrada=None
+    idsalida=0
+    identrada=0
+    
+    paso=me.getValue(m.get(grafo["birth year"],edad))
+    for x in paso.keys():
+        if gr.outdegree(grafo["connections"],x)>mayor_salida:
+            mayor_salida=gr.outdegree(grafo["connections"],x)
+            idsalida=x
+            nombre_salida=paso[x]
+        if gr.indegree(grafo["connections"],x)>mayor_entrada:
+            mayor_entrada=gr.indegree(grafo["connections"],x)
+            identrada=x
+            nombre_entrada=paso[x]
+    if idsalida==identrada:
+        for x in paso.keys():
+            if gr.indegree(grafo["connections"],x)>mayor_entrada and idsalida != identrada:
+                mayor_entrada=gr.indegree(grafo["connections"],x)
+                identrada=x
+                nombre_entrada=paso[x]
+    
+    
+    recorrido=djk.Dijkstra(grafo["connections"],idsalida)
+    if djk.hasPathTo(recorrido,identrada):
+        camino=djk.pathTo(recorrido,identrada)
+    respuesta={"partida":nombre_salida,"final":nombre_entrada,"ruta":camino}
+    return(respuesta)
+
+    
+
+
+        
+
+    
+
+
+
+
+
+
+
+        
+   
+
+        
+
+
+                        
+
+                
+
+
+
+            
+        
+    
+            
+
+
+
+        
+
+
+            
+
+
+
+
+
+

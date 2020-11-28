@@ -36,11 +36,7 @@ def newEdge(va, vb, weight=0):
     """
     Crea un nuevo arco entrelos vertices va y vb
     """
-    edge = {'vertexA': va,
-            'vertexB': vb,
-            'weight': weight
-            'count' : 1
-            }
+    edge = {'vertexA': va,'vertexB': vb,'weight': weight,'count': 1}
     return edge
 
 

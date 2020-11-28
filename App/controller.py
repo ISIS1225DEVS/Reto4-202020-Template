@@ -23,7 +23,7 @@
  * Dario Correal
  *
  """
-
+from DISClib.ADT import list as lt
 import os
 import config as cf
 from App import model
@@ -135,3 +135,36 @@ def conectados_estrictamente(graph,v1,v2):
 def findCircularRoutesList(grafo, vertice, tiempoInicial, tiempoFinal):
     return model.createCicleUnderTime(grafo, vertice, tiempoInicial, tiempoFinal)
 
+
+def rutas_por_min(estacion,tiempo,grafo):
+    
+    tiempo=int(tiempo)*60
+    """
+    lista= lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None)
+    return(model.rutas_por_min(estacion,tiempo,grafo,lista,estacion))
+    """
+    lista=[]
+    return(model.organizar(model.rutas_por_min(estacion,tiempo,grafo,lista),estacion,lista))
+    
+
+
+
+def ruta_años(grafo,edad):
+    edad=int(edad)
+    if edad == 1:
+        edad="0-10"
+    elif edad==2:
+        edad="10-20"
+    elif edad==3:
+        edad="20-30"
+    elif edad==4:
+        edad="30-40"
+    elif edad==5:
+        edad="40-50"
+    elif edad==6:
+        edad="50-60"
+    else:
+        edad="mas de 60"
+    print(edad)
+    respuesta=model.rango_edades(grafo,edad)
+    return (respuesta)

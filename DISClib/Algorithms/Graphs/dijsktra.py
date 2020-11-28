@@ -43,7 +43,6 @@ def Dijkstra(graph, source):
     Args:
         graph: El grafo de busqueda
         source: El vertice de inicio
-
     Returns:
         Un nuevo grafo vacío
     Raises:

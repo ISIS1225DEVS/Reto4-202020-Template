@@ -31,10 +31,11 @@ from DISClib.ADT import queue
 from DISClib.ADT import map as map
 from DISClib.ADT import stack
 from DISClib.Utils import error as error
+from DISClib.DataStructures import edge as ed
 assert config
 
 
-def BreadhtFisrtSearch(graph, source):
+def BreadhtFisrtSearch(graph, source,time,camino):
     """
     Genera un recorrido BFS sobre el grafo graph
     Args:
@@ -49,7 +50,8 @@ def BreadhtFisrtSearch(graph, source):
     try:
         search = {
                   'source': source,
-                  'visited': None
+                  'visited': None,
+                  'caminos':[]
                   }
         search['visited'] = map.newMap(numelements=g.numVertices(graph),
                                        maptype='PROBING',
@@ -59,13 +61,13 @@ def BreadhtFisrtSearch(graph, source):
                                             'edgeTo': None,
                                             'distTo': 0
                                             })
-        bfsVertex(search, graph, source)
+        bfsVertex(search, graph, source,time,camino)
         return search
     except Exception as exp:
         error.reraise(exp, 'bfs:BFS')
 
 
-def bfsVertex(search, graph, source):
+def bfsVertex(search, graph, source,time,camino):
     """
     Funcion auxiliar para calcular un recorrido BFS
     Args:
@@ -81,13 +83,29 @@ def bfsVertex(search, graph, source):
         adjsqueue = queue.newQueue()
         queue.enqueue(adjsqueue, source)
         while not (queue.isEmpty(adjsqueue)):
+            lista=[]
+            tiempo=time
             vertex = queue.dequeue(adjsqueue)
             visited_v = map.get(search['visited'], vertex)['value']
             adjslst = g.adjacents(graph, vertex)
             adjslstiter = it.newIterator(adjslst)
             while (it.hasNext(adjslstiter)):
+                
                 w = it.next(adjslstiter)
                 visited_w = map.get(search['visited'], w)
+                
+                if ed.weight(g.getEdge(graph,vertex,w))<=tiempo:
+                    lista.append(w)
+                    
+                    tiempo=tiempo-ed.weight(g.getEdge(graph,vertex,w))
+                else:
+                    camino.append(lista)
+
+                
+
+               
+
+
                 if visited_w is None:
                     dist_to_w = visited_v['distTo'] + 1
                     visited_w = {'marked': True,

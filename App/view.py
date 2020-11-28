@@ -45,7 +45,7 @@ operación seleccionada.
 
 
 servicefile = '201801-2-citibike-tripdata.csv'
-
+cont=0
 initialStation = None
 recursionLimit = 20000
 
@@ -64,7 +64,7 @@ def printMenu():
     print("4- Buscar ruta turistica Circular")
     print("5- Buscar ruta turistica de menor tiempo")
     print("6- Buscar ruta turistica por resistencia")
-    print("7- Buscar ruta mas corta entre estaciones")
+    print("7- buscar rutas por rango de edades")
     print("8- Buscar ruta de interes turístico")
     print("9- Buscar estaciones para publicidad e identificacion de Bicicletas para mantenimiento")
     print("10- Buscar bicicletas para mantenimiento")
@@ -74,6 +74,7 @@ def printMenu():
 def optionTwo():
     print("\nCargando información de transporte de singapur ....")
     controller.loadTrips(cont)
+    print(cont['stops'])
     numedges = controller.totalConnections(cont)
     numvertex = controller.totalStops(cont)
     print('Numero de vertices: ' + str(numvertex))
@@ -81,6 +82,7 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+    
     
     
 def optionThree():
@@ -99,16 +101,31 @@ def optionFourTwo(graph, vertex, initialTime, finalTime):
     return routesList
 
 
-def optionFive():
-    None
+def optionFive(estation,time,graph):
+    routesList = controller.rutas_por_min(estation,time,graph)
+    return routesList
 
 
 def optionSix():
     None
 
 
-def optionSeven():
-    None
+def optionSeven(graph):
+    print("rango de edades\n")
+    print("1) 0-10 años\n")
+    print("2) 10-20 años\n")
+    print("3) 20-30 años\n")
+    print("4) 30-40 años\n")
+    print("5) 40-50 años\n")
+    print("6) 50-60 años\n")
+    print("7) +60 años\n")
+    edad=input("")
+    routesList = controller.ruta_años(graph,edad)
+    return routesList
+
+
+
+    
 
 
 def optionEight():
@@ -164,8 +181,10 @@ while True:
 
         
     elif int(inputs[0]) == 5:
-        executiontime = timeit.timeit(optionFive, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        estation=input('Estación de partida: ')
+        time=input("tiempo estimado: ")
+        lista_rutas=optionFive(estation, time, cont)
+        print(lista_rutas)
 
 
     elif int(inputs[0]) == 6:
@@ -174,8 +193,8 @@ while True:
 
 
     elif int(inputs[0]) == 7:
-        executiontime = timeit.timeit(optionSeven, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
+        respuesta=optionSeven(cont)
+        print(respuesta)
 
 
     elif int(inputs[0]) == 8:
