@@ -85,12 +85,12 @@ Añade un viaje al grafo
     nombreEstacionDestino= trip['end station name']
     latitudInicial=trip['start station latitude']
     longitudInicial=trip['start station longitude']
-    latitudFinal=trip['end station latitud']
+    latitudFinal=trip['end station latitude']
     longitudFinal=trip['end station longitude']
-    m.put(analyzer['latitud_inicial'], origin, latitudInicial)
-    m.put(analyzer['longitud_inicial'], origin, longitudInicial)
-    m.put(analyzer['latitud_final'], origin, latitudFinal)
-    m.put(analyzer['longitud_final'], origin, longitudFinal)
+    m.put(analyzer['coordinates'], origin, latitudInicial)
+    m.put(analyzer['coordinates'], origin, longitudInicial)
+    m.put(analyzer['coordinates'], origin, latitudFinal)
+    m.put(analyzer['coordinates'], origin, longitudFinal)
     m.put(analyzer['EstacionesXid'], origin, nombreEstacionOrigen)
     m.put(analyzer['EstacionesXid'], destination, nombreEstacionDestino)
     duration = int(trip['tripduration'])
@@ -242,56 +242,6 @@ def RutasCirculares(analyzer, vertice, limiteInicial, limiteFinal): #REQUERIMIEN
 
     return (rutas_circulares_total)
 
-def RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL): #REQUERIMIENTO 6
-  
-    """
-    Estacion mas cercana a la posicion actual, Estacion mas cercana al destino, (Menor) Tiempo estimado, Lista de estaciones para llegar al destino
-    """
-    actualNearStationID = destinyNearStationID = None
-
-    coords= analyzer['coordinates']
-    actualNear = destinyNear = float('INF')
-    keyList = m.keySet(coords)
-
-    #Conseguir las estaciones mas cercanas al destino
-    for i in range(m.size(coords)):
-        key = lt.getElement(keyList, i)
-        lat, lon, s_e = m.get(coords, key)['value']
-        lat = float(lat); lon = float(lon)
-
-        distanceToActual = distance(lat, lon, latitudActual, longitudActual)
-        distanceToDestiny = distance(lat, lon, latitudDestino, longitudDestino)
-
-        #s_e esta para verificar que sea entrada o salida
-        if distanceToActual < actualNear and s_e == 0:
-            actualNear = distanceToActual
-            actualNearStationID = key
-            
-        if distanceToDestiny < destinyNear and s_e == 1:
-            destinyNear = distanceToDestiny
-            destinyNearStationID = key
-
-    #Obtener el nombre
-    actualNearStation = getStation(analyzer, actualNearStationID)
-    destinyNearStation = getStation(analyzer, destinyNearStationID)
-
-    #Usar Dijsktra para conseguir el resto de info
-    structureActual = djk.Dijkstra(analyzer['connections'], actualNearStationID)
-    if djk.hasPathTo(structureActual, destinyNearStationID):
-        tripTime = djk.distTo(structureActual, destinyNearStationID)
-        stationStack = djk.pathTo(structureActual, destinyNearStationID)
-    else:
-        return (actualNearStation, destinyNearStation,float('INF'), None)
-
-    #De stack a lista con la informacion pulida
-    stationList = lt.newList(datastructure='ARRAY_LIST')
-    for i in range(st.size(stationStack)):
-        stationD = st.pop(stationStack)
-        vA = getStation(analyzer, stationD["vertexA"])[1]; vB = getStation(analyzer, stationD["vertexB"])[1]
-        lt.addLast(stationList, (vA, vB))
-
-    return actualNearStation, destinyNearStation, tripTime, stationList
-
 def minimum_path(analyzer, initialStation,value):
     analyzer['paths'] = djk.Dijkstra(analyzer['connections'],initialStation)
     valor_recorridos = gr.numVertices(analyzer['paths'])['weight']
@@ -300,7 +250,7 @@ def minimum_path(analyzer, initialStation,value):
     else:
         return 0
 
-def viaje_por_coordenadas(analyzer,latitud_origen,longitud_origen,latitud_destino,longitud_destino):
+def viaje_por_coordenadas(analyzer,latitud_origen,longitud_origen,latitud_destino,longitud_destino): #REQUERIMIENTO6
     if latitud_origen in analyzer['latitud_inicial']:
         if longitud_origen in analyzer['longitud_inicial']:
             if latitud_destino in analyzer['latitud_inicial']:
@@ -310,6 +260,8 @@ def viaje_por_coordenadas(analyzer,latitud_origen,longitud_origen,latitud_destin
   
     respuesta = djk.pathTo(estacion_origen,estacion_destino)
     return respuesta 
+
+
 
 
 # ==============================
