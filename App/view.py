@@ -123,7 +123,7 @@ def Requerimiento4():
 
 # def Requerimiento5():
 
-def Requerimiento6():
+def Requerimiento5():
     centi = True
     while centi:
         latAct = input('Latitud Actual\n')
