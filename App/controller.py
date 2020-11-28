@@ -74,6 +74,38 @@ def loadFile(citibike, tripfile):
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+def ejecutarreq2 (citibike, disponible, station1):
+    model.req2(citibike, disponible, station1)
+
+def ejecutarreq3 (citibike):
+    retorno = model.req3(citibike)
+    a = []
+    b = []
+    c = []
+    for j in retorno[0]:
+        a.append('La estación '+ str(j['key']) + ' con '+ str(j['value']) + ' llegadas')
+    for j in retorno[1]:
+        b.append('La estación '+ str(j['key']) + ' con '+ str(j['value']) + ' salidas')
+    for j in retorno[2]:
+        c.append('La estación '+ str(j['key']) + ' con '+ str(j['value']) + ' llegadas y salidas')
+    
+    print ('Las Estaciones con más llegadas son: ', a)
+    print ('Las Estaciones con más salidas son: ', b)
+    print ('Las Estaciones con menos llegadas y salidas son: ', c)
+    
+def ejecutarreq5 (citibike, edad):
+    retorno = model.req5(citibike, edad)
+    print ('La estación de la que más sale gente del grupo de edad es la: ', retorno[0])
+    print ('La estación a la que más llega gente del grupo de edad es la: ', retorno[1])
+    print ('La ruta entre esas estaciones es: ', retorno[2])
+    
+
+def ejecutarreq6 (citibike, lat1, lon1, lat2, lon2):
+    retorno = model.req6(citibike, lat1, lon1, lat2, lon2)
+    print ('La estación más cercana al punto de salida es la: ', retorno[0])
+    print ('La estación más cercana al destino es la: ', retorno[1])
+    print ('La ruta entre estas estaciones es: ', retorno[2])
+    
 
 def totalConnections(analyzer):
     """

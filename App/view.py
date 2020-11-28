@@ -28,6 +28,7 @@
 import sys
 import config
 from App import controller
+from App import model
 from DISClib.ADT import stack
 import timeit
 assert config
@@ -85,23 +86,36 @@ def optionTwo():
     print('El límite de recursión se ajusta a: ' + str(recursionLimit))
 
 def optionThree():
+    numedges = controller.totalConnections(cont)
+    numvertex = controller.totalStops(cont)
     scc = controller.numSCC(cont)
+    print('Numero de vertices: ' + str(numvertex))
+    print('Numero de arcos: ' + str(numedges))
     print('Número de elementos fuertemente conectados: ' + str(scc))
 
 def optionFour():
-    pass
+    disponible = 0
+    station1 = 0
+    controller.ejecutarreq2(cont, disponible, station1)
 
 def optionFive():
-    pass
+    controller.ejecutarreq3(cont)
+
 
 def optionSix():
     pass
 
 def optionSeven():
-    pass
+    edad = int(input('Edad del usuario: '))
+    controller.ejecutarreq5(cont, edad)
+
 
 def optionEight():
-    pass
+    lat1 = float(input('Ingrese la latitud del punto de salida: '))
+    lon1 = float(input('Ingrese la longitud del punto de salida: '))
+    lat2 = float(input('Ingrese la latitud del punto de llegada: '))
+    lon2 = float(input('Ingrese la longitud del punto de llegada: '))
+    controller.ejecutarreq6(cont, lat1, lon1, lat2, lon2)
 
 def optionNine():
     pass
@@ -123,6 +137,9 @@ while True:
         cont = controller.init()
 
     elif int(inputs[0]) == 2:
+
+        controller.loadTrips(cont)
+
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
