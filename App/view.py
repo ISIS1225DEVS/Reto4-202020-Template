@@ -115,7 +115,11 @@ def Requerimiento2():
     
 # def Requerimiento3():
 
-# def Requerimiento4():
+def Requerimiento4():
+    estacion = input(str("Ingrese la estación desde la cual va a salir: "))
+    tiempo = input(str("Ingrese el tiempo máximo que desea demorarse: "))
+    resp = controller.mejoresRutas(cont,estacion,tiempo)
+    print("Camino más cortos en sus alrededores: "+str(resp))
 
 def Requerimiento5():
     edad= input("Ingrese su edad: ")
@@ -135,8 +139,14 @@ def Requerimiento5():
             # print(nombre)
         
 
-# def Requerimiento6():
-# #    
+def Requerimiento6():
+    latitud_actual = input(str("Ingrese la latitud de su parada actual: "))
+    longitud_actual = input(str("Ingrese la longitud de su parada actual: "))
+    latitud_destino = input(str("Ingrese la latitud de su parada de destino: "))
+    longitud_destino = input(str("Ingrese la longitud de su parada de destino: "))
+    resp = controller.ruta_por_coordenadas(cont,latitud_actual,longitud_actual,latitud_destino,longitud_destino)
+    print("La ruta más corta entre su ubicación actual es: "+str(resp))
+
     
     
 
