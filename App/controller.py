@@ -56,7 +56,11 @@ def init():
 #  de datos en los modelos
 # ___________________________________________________
 
+def requerimiento3(grafo,analyzer):
+    model.requerimiento3(grafo,analyzer)
 
+def requerimiento6(grafo,lat1,lon1,lat2,lon2,analyzer):
+    model.distancia(grafo,lat1,lon1,lat2,lon2,analyzer)
 
 def loadTrips(citibike):
 

@@ -63,8 +63,6 @@ def DepthFirstSearch(graph, source):
         error.reraise(exp, 'dfs:DFS')
 
 
-
-
 def dfsVertex(search, graph, vertex):
     """
     Funcion auxiliar para calcular un recorrido DFS

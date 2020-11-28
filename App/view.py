@@ -31,6 +31,7 @@ from App import controller
 from DISClib.ADT import stack
 import timeit
 assert config
+import model as mod
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -62,7 +63,7 @@ def printMenu():
     print("2- Cargar informacion")
     print("3- Buscar cantidad de cluster de Viajes")
     print("4- Buscar ruta turistica Circular")
-    print("5- Buscar ruta turistica de menor tiempo")
+    print("5- Buscar estaciones críticas")
     print("6- Buscar ruta turistica por resistencia")
     print("7- Buscar ruta mas corta entre estaciones")
     print("8- Buscar ruta de interes turístico")
@@ -81,8 +82,9 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
+
     
-    
+
 def optionThree():
         v1=input("Ingrese estación 1(id-name)\n")
         v2=input("Ingrese estación 2(id-name)\n")
@@ -100,8 +102,7 @@ def optionFourTwo(graph, vertex, initialTime, finalTime):
 
 
 def optionFive():
-    None
-
+    controller.requerimiento3(cont["connections"],cont)
 
 def optionSix():
     None
@@ -112,7 +113,11 @@ def optionSeven():
 
 
 def optionEight():
-    None
+    lat1=float(input("ingrese latitud partida"))
+    lon1=float(input("ingrese longitud partida"))
+    lat2=float(input("ingrese latitud final"))
+    lon2=float(input("ingrese longitud final"))
+    controller.requerimiento6(cont["connections"],lat1,lon1,lat2,lon2,cont)
 
 
 def optionNine():
@@ -167,7 +172,7 @@ while True:
         print(listaRutas)
         
     elif int(inputs[0]) == 5:
-        None
+        optionFive()
 
 
     elif int(inputs[0]) == 6:
@@ -179,7 +184,7 @@ while True:
 
 
     elif int(inputs[0]) == 8:
-        None
+        optionEight()
 
 
     elif int(inputs[0]) == 9:

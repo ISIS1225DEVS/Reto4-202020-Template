@@ -39,7 +39,7 @@ def newEdge(va, vb, weight=0):
     edge = {'vertexA': va,
             'vertexB': vb,
             'weight': weight,
-            'count' : 1
+            "count":1
             }
     return edge
 
@@ -77,11 +77,8 @@ def compareedges(edge1, edge2):
             return True
     return False
 
-def updateAverageWeight(edge, weight):
-    """
-    Actualiza el peso del arco entre los vertices va y vb usando el promedio de multiples pesos
-    """
-    newWeight = (edge['weight'] * edge['count'] + weight) / (edge['count'] + 1)
-    edge['weight'] = newWeight
-    edge['count'] += 1
-    return edge['weight']
+def updateAverageWeight(edge,weight):
+    newWeight=(edge["weight"]*edge["count"]+weight)/(edge["count"]+1)
+    edge["weight"]=newWeight
+    edge["count"]+=1
+    return edge["weight"]
