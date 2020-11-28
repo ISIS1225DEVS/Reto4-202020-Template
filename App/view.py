@@ -151,7 +151,12 @@ def Requerimiento6():
     print('>')
 
 def Requerimiento6():
-   
+    latitud_actual = input(str("Ingrese la latitud de su parada actual: "))
+    longitud_actual = input(str("Ingrese la longitud de su parada actual: "))
+    latitud_destino = input(str("Ingrese la latitud de su parada de destino: "))
+    longitud_destino = input(str("Ingrese la longitud de su parada de destino: "))
+    resp = controller.ruta_por_coordenadas(cont,latitud_actual,longitud_actual,latitud_destino,longitud_destino)
+    print("La ruta más corta entre su ubicación actual es: "+str(resp))
     
     
 
