@@ -121,9 +121,5 @@ def RutaInteresTuristico(citibike, latitudActual, longitudActual, latitudDestino
 def ruta(analyzer, startvertice, finalvertice):
     return model.hallar_ruta(analyzer, startvertice, finalvertice)
 
-def mejoresRutas(analyzer,parada_inicial,tiempo):
-    respuesta = model.minimum_path(analyzer,parada_inicial,tiempo)
-    return respuesta 
-def ruta_por_coordenadas(analyzer,latitud_origen,longitud_origen,latitud_destino,longitud_destino):
-    respuesta = model.viaje_por_coordenadas(analyzer,latitud_origen,longitud_origen,latitud_destino,longitud_destino)
-    return respuesta 
+def ViajesPorEdades(analyzer,edad):
+    return model.ViajePorEdades(analyzer, edad)

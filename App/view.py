@@ -63,7 +63,7 @@ def printMenu():
 
 
 def CargarDatos(): #CARGAR INFORMACION
-    print("\nCargando información de transporte de singapur ....")
+    print("\nCargando información de transporte de citibike ....")
     # para todos los archivos
     #controller.loadTrips(cont)
     # para uno solo
@@ -121,34 +121,23 @@ def Requerimiento4():
     resp = controller.mejoresRutas(cont,estacion,tiempo)
     print("Camino más cortos en sus alrededores: "+str(resp))
 
-# def Requerimiento5():
-
 def Requerimiento5():
-    centi = True
-    while centi:
-        latAct = input('Latitud Actual\n')
-        lonAct = input('Longitud Actual\n')
-        latDes = input('Latitud Destino\n')
-        lonDes = input('Longitud Destino\n')
-        try:
-            latAct, lonAct, latDes, lonDes = float(latAct),float(lonAct),float(latDes),float(lonDes)
-        except ValueError:
-            print('Ingrese coordenadas validas')
-        else:
-            centi = False
-
-    nearStationActual, nearStationDestiny, tripTime, stationList = controller.turistInteres(citibike, latAct, lonAct, latDes, lonDes)
-
-    print(f'La estacion mas cercana a su ubicacion actual es: <{nearStationActual[1]}>')
-    print(f'La estacion mas cercana a su ubicacion destino es: <{nearStationDestiny[1]}>')
-    print(f'El tiempo estimado de viaje es: <{tripTime}>')
-    print('La lista de estaciones en la ruta es:\n<')
-    if stationList is not None:
-        for item in range(lt.size(stationList)):
-            station = lt.getElement(stationList, item)
-            print(f'\t{item+1}) De {station[0]} a {station[1]}')
-    else: print('\tNo hay estaciones de por medio')
-    print('>')
+    edad= input("Ingrese su edad: ")
+    respuesta=controller.ViajesPorEdades(cont, edad)
+   
+    iter=it.newIterator(respuesta)
+    while it.hasNext(iter):
+        ruta_edad= it.next(iter)
+        cantidad_rutas=lt.size(ruta_edad) 
+        iter2=it.newIterator(ruta_edad)
+        while it.hasNext(iter2):
+            informacion= it.next(iter2)
+            print(informacion)
+            
+            
+            # nombre=informacion['estacion1']]['value']
+            # print(nombre)
+        
 
 def Requerimiento6():
     latitud_actual = input(str("Ingrese la latitud de su parada actual: "))
@@ -157,6 +146,7 @@ def Requerimiento6():
     longitud_destino = input(str("Ingrese la longitud de su parada de destino: "))
     resp = controller.ruta_por_coordenadas(cont,latitud_actual,longitud_actual,latitud_destino,longitud_destino)
     print("La ruta más corta entre su ubicación actual es: "+str(resp))
+
     
     
 
