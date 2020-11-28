@@ -335,6 +335,7 @@ def createCicleUnderTime(grafo, vertice, tiempo1, tiempo2):
     ciclos = DepthFirstSearchCicles(scc_vertice, vertice)
     #Recorrido de cada ciclo presente en el Scc del vertice
     posicion = m.size(ciclos)
+    
     while posicion >= 0:
         
         posicion -= 1
@@ -346,7 +347,6 @@ def createCicleUnderTime(grafo, vertice, tiempo1, tiempo2):
         visitados = info_ruta['value']
         impreso = m.valueSet(visitados)
         lt.addFirst(camino, impreso)
-
         iterador_impreso = it.newIterator(impreso)
 
         while it.hasNext(iterador_impreso):
