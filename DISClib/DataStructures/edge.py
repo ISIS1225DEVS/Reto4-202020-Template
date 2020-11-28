@@ -75,3 +75,14 @@ def compareedges(edge1, edge2):
         if other(edge1, e1v) == other(edge2, e2v):
             return True
     return False
+
+def updateWeight(edge, newWeight):
+    """
+    Actualiza el peso de un arco al valor newWeight dado por parámetro
+
+    Args:
+        edge: arco a actualizar
+        newWeight: nuevo valor
+    """
+    edge['weight'] = newWeight
+    return edge

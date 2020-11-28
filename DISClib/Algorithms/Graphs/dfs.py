@@ -27,6 +27,7 @@
 import config
 from DISClib.DataStructures import adjlist as g
 from DISClib.DataStructures import listiterator as it
+from DISClib.DataStructures import liststructure as lt
 from DISClib.ADT import map as map
 from DISClib.ADT import stack as stk
 from DISClib.Utils import error as error
@@ -135,3 +136,64 @@ def pathTo(search, vertex):
         return path
     except Exception as exp:
         error.reraise(exp, 'dfs:pathto')
+
+def DepthFirstSearchCycles(graph, source, fixed_ed):
+    """
+    Genera un recorrido DFS sobre el grafo graph
+    Args:
+        graph:  El grafo a recorrer
+        source: Vertice de inicio del recorrido.
+    Returns:
+        Una estructura para determinar los vertices
+        conectados a source
+    Raises:
+        Exception
+    """
+    try:
+        search = {
+                  'source': source,
+                  'visited': None,
+                  'total': None
+                  }
+
+        search['visited'] = map.newMap(numelements=g.numVertices(graph),
+                                       maptype='PROBING',
+                                       comparefunction=graph['comparefunction']
+                                       )
+
+        map.put(search['visited'], source, {'marked': True, 'edgeTo': None})
+        dfsVertexCycles(search, graph, source, fixed_ed)
+        return search
+    except Exception as exp:
+        error.reraise(exp, 'dfs:DFS')
+
+
+def dfsVertexCycles(search, graph, vertex, vertex1):
+    try:
+        adjlst = g.adjacents(graph, vertex)
+        adjslstiter = it.newIterator(adjlst)
+
+        pos = lt.isPresent(adjlst, vertex1) # Posición del vértice fijo
+        fixed_edge = lt.getElement(adjlst, pos) # Elemento que contiene el vértice dentro de la adjlst
+
+        totalcycles = 0 # Inicio contador
+        path = {}
+
+        while (it.hasNext(adjslstiter)):
+            w = it.next(adjslstiter) # entro al vertice a analizar
+            visited = map.get(search['visited'], w) # Pido la entrada en el mapa de los marcados
+            if visited is None:
+                map.put(search['visited'],
+                        w, {'marked': True, 'edgeTo': vertex})
+                dfsVertex(search, graph, w)
+                path[w] = vertex
+            elif visited == fixed_edge:
+                totalcycles += 1
+                print(path)
+                path = {}
+
+        search['total'] = totalcycles
+
+        return search
+    except Exception as exp:
+        error.reraise(exp, 'dfs:dfsVertex')
