@@ -92,7 +92,7 @@ def optionThree():
 
 
 def optionFourOne(graph, vertex, initialTime, finalTime):
-    routesNumber = controller.findCircularRoutesList(graph, vertex, initialTime, finalTime)
+    routesNumber = controller.findCircularRoutesNumber(graph, vertex, initialTime, finalTime)
     return lt.size(routesNumber)
 
   
@@ -159,15 +159,17 @@ while True:
     elif int(inputs[0]) == 4:
         print("""Los tiempos presentados se calculan con un estimado de 20 
                 minutos que podrá destinar para conocer cada parada""")
+
         vertex = input('Indique la estación de partida: ')
         initialTime = input('Tiempo mínimo disponible para el recorrido, dado en minutos: ')
         finalTime = input('Tiempo máximo disponible para el recorrido, dado en minutos: ')
-        numeroRutas = optionFourOne(graph, vertex, initialTime, finalTime)
-        listaRutas = optionFourTwo(graph, vertex, initialTime, finalTime)
+
+        numeroRutas = optionFourOne(cont['connections'], vertex, initialTime, finalTime)
+        listaRutas = optionFourTwo(cont['connections'], vertex, initialTime, finalTime)
+
         print('Se han encontrado ' + numeroRutas + ' rutas.')
         print('Lista de las opciones: \n')
         print(listaRutas)
-
         
     elif int(inputs[0]) == 5:
         optionFive()
