@@ -87,6 +87,8 @@ Añade un viaje al grafo
     longitudInicial=trip['start station longitude']
     latitudFinal=trip['end station latitude']
     longitudFinal=trip['end station longitude']
+    anio=trip['birth year']
+    m.put(analyzer['years'], origin, anio)
     m.put(analyzer['coordinates'], origin, latitudInicial)
     m.put(analyzer['coordinates'], origin, longitudInicial)
     m.put(analyzer['coordinates'], origin, latitudFinal)
@@ -204,7 +206,6 @@ def RutasCirculares(analyzer, vertice, limiteInicial, limiteFinal): #REQUERIMIEN
     peso=0
     
     rutas_circulares_total=  lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None) #agrupar todas las rutas cicrulares
-    
     dijkstraIda= djk.Dijkstra(analyzer['connections'], vertice)
     vertices=gr.vertices(analyzer['connections'])
 
@@ -260,6 +261,64 @@ def viaje_por_coordenadas(analyzer,latitud_origen,longitud_origen,latitud_destin
   
     respuesta = djk.pathTo(estacion_origen,estacion_destino)
     return respuesta 
+
+def calcularEdad(edad):
+    edad=int(edad)
+    
+    if edad>0 and edad<=10:
+        rango_edad= "0-10"
+    if edad>10 and edad<=20:
+        rango_edad= "11-20"
+    if edad>20 and edad<=30:
+        rango_edad= "21-30"
+    if edad>30 and edad<=40:
+        rango_edad= "31-40"
+    if edad>40 and edad<=50:
+        rango_edad= "41-50"
+    if edad>50 and edad<=60:
+        rango_edad= "51-60"
+    if edad>60:
+        rango_edad="60+"
+
+
+def ViajePorEdades(analyzer, edad):
+    rutas_finales= lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None)
+   
+    edad=int(edad)
+    # prueba= djk.Dijkstra(analyzer['connections'], "72")
+    vertices=gr.vertices(analyzer['connections'])
+    iter=it.newIterator(vertices)
+    # print(prueba)
+
+    while it.hasNext(iter):
+        rutas=lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None)
+        datos_rutas= lt.newList(datastructure='SINGLE_LINKED', cmpfunction=None)
+        cada_vertice= it.next(iter)
+        estacion= djk.Dijkstra(analyzer['connections'], cada_vertice)
+        caminosestacion=djk.pathTo(estacion, cada_vertice)
+        if not caminosestacion:
+            continue
+        while not stack.isEmpty(caminosestacion):
+            dato=stack.pop(estacion)
+            lt.addLast(rutas, dato)
+        
+        iter2=it.newIterator(rutas)
+        while it.hasNext(iter2):
+            vertice=it.next(iter2)
+            anio=m.get(analyzer['years'], vertice['vertexA'])
+            anio=2020-int(anio)
+            anio=calcularEdad(anio)
+            print(anio)
+            edad= calcularEdad(edad)
+            print(edad)
+            if anio==edad:
+                estacion1=m.get(analyzer['EstacionesXid'], cada_vertice['vertexA'])
+                estacion2=m.get(analyzer['EstacionesXid'], cada_vertice['vertexB'])
+                lt.addLast(datos_rutas, {"estacion1": estacion1, "estacion2":estacion2, "anio":anio})
+
+        lt.addLast(rutas_finales, datos_rutas)
+
+    return (rutas_finales)
 
 
 

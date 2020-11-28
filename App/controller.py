@@ -120,3 +120,6 @@ def RutaInteresTuristico(citibike, latitudActual, longitudActual, latitudDestino
     return model.RutaInteresTuristico(citibike, latitudActual, longitudActual, latitudDestino, longitudDestino)
 def ruta(analyzer, startvertice, finalvertice):
     return model.hallar_ruta(analyzer, startvertice, finalvertice)
+
+def ViajesPorEdades(analyzer,edad):
+    return model.ViajePorEdades(analyzer, edad)
