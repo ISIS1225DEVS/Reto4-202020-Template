@@ -115,7 +115,11 @@ def Requerimiento2():
     
 # def Requerimiento3():
 
-# def Requerimiento4():
+def Requerimiento4():
+    estacion = input(str("Ingrese la estación desde la cual va a salir: "))
+    tiempo = input(str("Ingrese el tiempo máximo que desea demorarse: "))
+    resp = controller.mejoresRutas(analyzer,estacion,tiempo)
+    print("Camino más cortos en sus alrededores: "+str(resp))
 
 # def Requerimiento5():
 
