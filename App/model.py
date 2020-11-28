@@ -518,6 +518,7 @@ def requerimiento3(grafo,analyzer):
     final=retorno1+retorno2+retorno3
     return print(final)
 
+from math import sin, cos, sqrt, atan2, radians
 
 def distancia(grafo,lat1,lon1,lat2,lon2,analyzer):
     lista=gr.vertices(grafo)
