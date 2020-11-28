@@ -112,8 +112,11 @@ def tripsyear(analyzer,numero):
 def RutasCirculares(analyzer, vertex, limiteInicial, limiteFinal): #REQUERIMIENTO 2
     return model.RutasCirculares(analyzer, vertex, limiteInicial, limiteFinal)
 
-def RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL): #REQUERIMIENTO 6
-    return model.RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL)
-
+def RutaInteresTuristico(citibike, latitudActual, longitudActual, latitudDestino, longitudDestino):
+    """
+    Estacion mas cercana a la posicion actual, Estacion mas cercana al destino, (Menor) Tiempo estimado, Lista de estaciones para llegar al destino\n
+    Req 6
+    """
+    return model.RutaInteresTuristico(citibike, latitudActual, longitudActual, latitudDestino, longitudDestino)
 def ruta(analyzer, startvertice, finalvertice):
     return model.hallar_ruta(analyzer, startvertice, finalvertice)

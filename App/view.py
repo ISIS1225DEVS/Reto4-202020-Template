@@ -112,24 +112,39 @@ def Requerimiento2():
     print("Rutas Circulares encontradas: "+ str(cantidad_rutas))
 
     # imprimirReq2(respuesta[0], respuesta[1], tiempoInicial, tiempoFinal)
-
-def imprimirReq2(pesoTotal, vertices, tiempoInicial, tiempoFinal):
-    i=0
-    if peso>int(tiempoInicial) and peso<int(tiempoFinal):
-        print("Estacion de salida: "+ vertices[0])
-        print("Estacion de llegada: "+ vertices[1])
-        i+=1
-    else:
-        print("No hay rutas circulares")
-    print("Total de rutas circulaes: "+ str(i))
-    print("Tiempo total del recorrido: "+ str(peso))
-
     
 # def Requerimiento3():
 
 # def Requerimiento4():
 
 # def Requerimiento5():
+
+def Requerimiento6():
+    centi = True
+    while centi:
+        latAct = input('Latitud Actual\n')
+        lonAct = input('Longitud Actual\n')
+        latDes = input('Latitud Destino\n')
+        lonDes = input('Longitud Destino\n')
+        try:
+            latAct, lonAct, latDes, lonDes = float(latAct),float(lonAct),float(latDes),float(lonDes)
+        except ValueError:
+            print('Ingrese coordenadas validas')
+        else:
+            centi = False
+
+    nearStationActual, nearStationDestiny, tripTime, stationList = controller.turistInteres(citibike, latAct, lonAct, latDes, lonDes)
+
+    print(f'La estacion mas cercana a su ubicacion actual es: <{nearStationActual[1]}>')
+    print(f'La estacion mas cercana a su ubicacion destino es: <{nearStationDestiny[1]}>')
+    print(f'El tiempo estimado de viaje es: <{tripTime}>')
+    print('La lista de estaciones en la ruta es:\n<')
+    if stationList is not None:
+        for item in range(lt.size(stationList)):
+            station = lt.getElement(stationList, item)
+            print(f'\t{item+1}) De {station[0]} a {station[1]}')
+    else: print('\tNo hay estaciones de por medio')
+    print('>')
 
 def Requerimiento6():
    

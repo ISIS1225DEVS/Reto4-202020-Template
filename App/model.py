@@ -83,6 +83,14 @@ Añade un viaje al grafo
     destination = trip['end station id']
     nombreEstacionOrigen= trip['start station name']
     nombreEstacionDestino= trip['end station name']
+    latitudInicial=trip['start station latitude']
+    longitudInicial=trip['start station longitude']
+    latitudFinal=trip['end station latitud']
+    longitudFinal=trip['end station longitude']
+    m.put(analyzer['coordinates'], origin, latitudInicial)
+    m.put(analyzer['coordinates'], origin, longitudInicial)
+    m.put(analyzer['coordinates'], origin, latitudInicial)
+    m.put(analyzer['coordinates'], origin, longitudFinal)
     m.put(analyzer['EstacionesXid'], origin, nombreEstacionOrigen)
     m.put(analyzer['EstacionesXid'], destination, nombreEstacionDestino)
     duration = int(trip['tripduration'])
@@ -118,24 +126,6 @@ def addConnection(analyzer, origin, destination, duration):
         numero_viajes += 1
         edge["weight"]=promedio
     return analyzer
-
-def addCoordinates(analyzer, trip):
-    """
-    Para el req 6
-    """
-    entry = analyzer['coordinates']
-    stationStart = (trip['start station latitude'], trip['start station longitude'], 0)
-    stationEnd = (trip['end station latitude'], trip['end station longitude'], 1)
-
-    e1 = m.get(entry, trip['start station id'])
-    if e1 is None:
-        m.put(entry, trip['start station id'], stationStart)
-
-    e2 = m.get(entry, trip['end station id'])
-    if e2 is None:
-        m.put(entry, trip['end station id'], stationEnd)
-
-    return analyzer 
 
 
 # ==============================
@@ -206,6 +196,15 @@ def entranviajes(grafo,word):
     """
     return gr.indegree(grafo,word)
 
+def getStation(analyzer, idStation):
+    """
+    Args:\n
+    citibike: El archivo en total; idStation el vertice <end station id>-<start station id>
+    """
+    if m.contains(analyzer['EstacionesXid'], idStation):
+        keyValue = m.get(citibike['EstacionesXid'], idStation)
+        return (keyValue['key'], keyValue['value'])
+    return None, None
 # ==============================
 # REQUERIMIENTOS
 # ==============================
@@ -250,8 +249,56 @@ def RutasCirculares(analyzer, vertice, limiteInicial, limiteFinal): #REQUERIMIEN
         lt.addLast(rutas_circulares_total, datos_rutas)
 
     return (rutas_circulares_total)
-# def RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL): #REQUERIMIENTO 6
-   
+
+def RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinalL): #REQUERIMIENTO 6
+  
+    """
+    Estacion mas cercana a la posicion actual, Estacion mas cercana al destino, (Menor) Tiempo estimado, Lista de estaciones para llegar al destino
+    """
+    actualNearStationID = destinyNearStationID = None
+
+    coords= analyzer['coordinates']
+    actualNear = destinyNear = float('INF')
+    keyList = m.keySet(coords)
+
+    #Conseguir las estaciones mas cercanas al destino
+    for i in range(m.size(coords)):
+        key = lt.getElement(keyList, i)
+        lat, lon, s_e = m.get(coords, key)['value']
+        lat = float(lat); lon = float(lon)
+
+        distanceToActual = distance(lat, lon, latitudActual, longitudActual)
+        distanceToDestiny = distance(lat, lon, latitudDestino, longitudDestino)
+
+        #s_e esta para verificar que sea entrada o salida
+        if distanceToActual < actualNear and s_e == 0:
+            actualNear = distanceToActual
+            actualNearStationID = key
+            
+        if distanceToDestiny < destinyNear and s_e == 1:
+            destinyNear = distanceToDestiny
+            destinyNearStationID = key
+
+    #Obtener el nombre
+    actualNearStation = getStation(analyzer, actualNearStationID)
+    destinyNearStation = getStation(analyzer, destinyNearStationID)
+
+    #Usar Dijsktra para conseguir el resto de info
+    structureActual = djk.Dijkstra(analyzer['connections'], actualNearStationID)
+    if djk.hasPathTo(structureActual, destinyNearStationID):
+        tripTime = djk.distTo(structureActual, destinyNearStationID)
+        stationStack = djk.pathTo(structureActual, destinyNearStationID)
+    else:
+        return (actualNearStation, destinyNearStation,float('INF'), None)
+
+    #De stack a lista con la informacion pulida
+    stationList = lt.newList(datastructure='ARRAY_LIST')
+    for i in range(st.size(stationStack)):
+        stationD = st.pop(stationStack)
+        vA = getStation(analyzer, stationD["vertexA"])[1]; vB = getStation(analyzer, stationD["vertexB"])[1]
+        lt.addLast(stationList, (vA, vB))
+
+    return actualNearStation, destinyNearStation, tripTime, stationList
 
 
 
