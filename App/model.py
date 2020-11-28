@@ -29,7 +29,7 @@ from DISClib.ADT.graph import gr
 from DISClib.ADT import map as m
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
-from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import scc as scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
 from DISClib.DataStructures import edge as ed
@@ -296,14 +296,42 @@ def servedRoutes(analyzer):
 
 
 def createCicleUnderTime(grafo, vertice, tiempo1, tiempo2):
-    rutas_aprovadas = lt.newList(datastructure='ARRAY_LIST')
-    lista_ciclos = scc_vertice(grafo, vertice)
-    for ciclo in lista_ciclos:
-        lista = lt.getElement(lista_ciclos, vertice)
-        valido = scc_valido(lista, vertice, tiempo1, tiempo2)
-        lt.addFirst(rutas_aprovadas, valido)
-    return rutas_aprovadas
+    #Arraylst que alberga las rutas con un tiempo en el rango
+    lista_rutas = lt.newList(datastructure='ARRAYLIST')
+    #Scc del vertice
+    scc_vertice = scc.KosarajuUnicoSCC(grafo, vertice)
+    #Lista de los ciclos del Scc
+    ciclos = DepthFirstSearchCicles(scc_vertice, vertice)
+    #Recorrido de cada ciclo presente en el Scc del vertice
+    posicion = m.size(ciclos)
+    while posicion >= 0:
+        
+        posicion -= 1
+        costo = 0
+        camino = lt.newList(datastructure='ARRAYLIST')
+        #Llave valor de la ruta
+        info_ruta = m.get(ciclos, posicion)
+        #Mapa de vertices que componen la ruta
+        visitados = info_ruta['value']
+        impreso = m.valueSet(visitados)
+        lt.addFirst(camino, impreso)
 
+        iterador_impreso = it.newIterator(impreso)
+
+        while it.hasNext(iterador_impreso):
+            vertice = it.next(iterador_impreso)
+            valor_arco = m.get(grafo, vertice)
+            numerico = valor_arco['value']
+            costo += int(numerico['weight']) + 20
+
+            if tiempo1 <= costo <= tiempo2:
+                lt.addFirst(lista_rutas,camino)
+
+    return lista_rutas
+
+
+def findCircularRoutesNumber(grafo, vertice, tiempo1, tiempo2):
+    return lt.size(createCicleUnderTime(grafo, vertice, tiempo1, tiempo2))
 
 # ==============================
 # Funciones Helper

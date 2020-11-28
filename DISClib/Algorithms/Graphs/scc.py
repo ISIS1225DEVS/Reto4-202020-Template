@@ -164,3 +164,62 @@ def reverseGraph(graph):
 
 def comparenames(searchname, element):
     return (searchname == element['key'])
+
+
+
+#--------------------------------------------------
+#Scc para el requerimiento 2
+#--------------------------------------------------
+
+
+def KosarajuUnicoSCC(graph, vertex):
+    """
+    Implementa el algoritmo de Kosaraju
+    para encontrar los componentes conectados
+    de un grafo dirigido
+    Args:
+        graph: El grafo a examinar
+    Returns:
+        Una estructura con los componentes
+        conectados
+    Raises:
+        Exception
+    """
+    try:
+        scc_u = {
+                'idscc': None,
+                'marked': None,
+                'grmarked': None,
+                'components': 0
+            }
+
+        scc_u['idscc'] = map.newMap(g.numVertices(graph),
+                                  maptype='PROBING',
+                                  comparefunction=graph['comparefunction']
+                                  )
+
+        scc_u['marked'] = map.newMap(g.numVertices(graph), maptype='PROBING',
+                                   comparefunction=graph['comparefunction']
+                                   )
+        scc_u['grmarked'] = map.newMap(g.numVertices(graph), maptype='PROBING',
+                                     comparefunction=graph['comparefunction']
+                                     )
+
+        # Se calcula el grafo reverso de graph
+        greverse = reverseGraph(graph)
+
+        # Se calcula el DFO del reverso de graph
+        dforeverse = dfo.DepthFirstOrder(greverse)
+        grevrevpost = dforeverse['reversepost']
+
+        # Se recorre el grafo en el orden dado por reversepost (G-reverso)
+        scc_u['components'] = 0
+        while (not stack.isEmpty(grevrevpost)):
+            vert = stack.pop(grevrevpost)
+            if vert == str(vertex):
+                if not map.contains(scc_u['marked'], vert):
+                    scc_u['components'] += 1
+                    sccCount(graph, scc_u, vert)
+        return scc_u
+    except Exception as exp:
+        error.reraise(exp, 'scc_u:Kosaraju')

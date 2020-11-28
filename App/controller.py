@@ -127,11 +127,25 @@ def servedRoutes(analyzer):
     return maxvert, maxdeg
 
 
+#Requerimiento 1
 def conectados_estrictamente(graph,v1,v2):
     retorno=model.estrictamente_conectados(graph,v1,v2)
     return print(retorno)
 
 
+#Requerimiento 2
 def findCircularRoutesList(grafo, vertice, tiempoInicial, tiempoFinal):
     return model.createCicleUnderTime(grafo, vertice, tiempoInicial, tiempoFinal)
 
+def findCircularRoutesNumber(grafo, vertice, tiempo1, tiempo2):
+    return model.findCircularRoutesNumber(grafo, vertice, tiempo1, tiempo2)
+
+
+#Requerimiento 3
+def requerimiento3(grafo,analyzer):
+    model.requerimiento3(grafo,analyzer)
+
+
+#Requerimiento 6
+def requerimiento6(grafo,lat1,lon1,lat2,lon2,analyzer):
+    model.distancia(grafo,lat1,lon1,lat2,lon2,analyzer)
