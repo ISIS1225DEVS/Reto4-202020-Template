@@ -87,16 +87,18 @@ Añade un viaje al grafo
     longitudInicial=trip['start station longitude']
     latitudFinal=trip['end station latitud']
     longitudFinal=trip['end station longitude']
-    m.put(analyzer['coordinates'], origin, latitudInicial)
-    m.put(analyzer['coordinates'], origin, longitudInicial)
-    m.put(analyzer['coordinates'], origin, latitudInicial)
-    m.put(analyzer['coordinates'], origin, longitudFinal)
+    m.put(analyzer['latitud_inicial'], origin, latitudInicial)
+    m.put(analyzer['longitud_inicial'], origin, longitudInicial)
+    m.put(analyzer['latitud_final'], origin, latitudFinal)
+    m.put(analyzer['longitud_final'], origin, longitudFinal)
     m.put(analyzer['EstacionesXid'], origin, nombreEstacionOrigen)
     m.put(analyzer['EstacionesXid'], destination, nombreEstacionDestino)
     duration = int(trip['tripduration'])
     addStation(analyzer, origin)
     addStation(analyzer, destination)
     addConnection(analyzer, origin, destination, duration)
+
+    return analyzer
 
 def addStation(analyzer, stationid):
     """
@@ -291,16 +293,22 @@ def RutaInteresTuristico(analyzer, posInicialT, posFinalT, posInicialL, posFinal
     return actualNearStation, destinyNearStation, tripTime, stationList
 
 def minimum_path(analyzer, initialStation,value):
-    analyzer['paths'] = djk.Dijkstra(analyzer['trip'],initialStation)
-    valor_recorridos = gr.numVertices(analyzer['paths'])['duration']
+    analyzer['paths'] = djk.Dijkstra(analyzer['connections'],initialStation)
+    valor_recorridos = gr.numVertices(analyzer['paths'])['weight']
     if valor_recorridos < value:
         return analyzer
     else:
         return 0
 
 def viaje_por_coordenadas(analyzer,latitud_origen,longitud_origen,latitud_destino,longitud_destino):
-    estacion_llegada = analyzer['connections'][latitud_destino][longitud_destino]
-    respuesta = djk.pathTo(analyzer['connections'][latitud_origen][longitud_origen],estacion_llegada)
+    if latitud_origen in analyzer['latitud_inicial']:
+        if longitud_origen in analyzer['longitud_inicial']:
+            if latitud_destino in analyzer['latitud_inicial']:
+                if longitud_destino in analyzer['longitud_inicial']:
+                    estacion_origen = analyzer[latitud_origen][longitud_origen]
+                    estacion_destino = analyzer[latitud_destino][longitud_destino]
+  
+    respuesta = djk.pathTo(estacion_origen,estacion_destino)
     return respuesta 
 
 
